@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+.dash {
+  position: relative;
+  background-image: url('/images/bg.png');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+
+.dash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  filter: blur(10px);
+  transform: scale(1.1); 
+  z-index: 0;
+}
+
+
+.dash > * {
+  position: relative;
+  z-index: 1;
+}
