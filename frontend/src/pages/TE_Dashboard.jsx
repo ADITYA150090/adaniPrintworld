@@ -1,6 +1,6 @@
 
 
-
+import Slidebar from "../components/Slidebar";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -61,7 +61,10 @@ const TEDashboard = () => {
     );
 
   return (
+    <div className="flex">
+      <Slidebar/>
     <div className="w-full min-h-screen text-gray-900 dash p-6 md:p-10">
+      
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-1">
@@ -140,6 +143,7 @@ const TEDashboard = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
