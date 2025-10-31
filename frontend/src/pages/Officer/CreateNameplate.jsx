@@ -10,7 +10,7 @@ export default function App() {
     <div className="dash">
     <div className="min-h-screen ">
       <Sidebar active={activeTab} onChange={setActiveTab} />
-      <div className="flex-1 md:ml-20 lg:ml-60 transition-all duration-500">
+      <div className="flex-1 md:ml-2 lg:ml-60 transition-all duration-500">
         <NameplateDesigner />
       </div>
     </div>

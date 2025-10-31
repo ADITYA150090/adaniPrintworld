@@ -110,7 +110,6 @@ const Sidebar = ({ active, onChange }) => {
             />
           </button>
         </div>
-
         {/* Menu Items */}
         <div className="flex flex-col gap-4">
           {menuItems.map((item) => (
