@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../../components/Slidebar";
+import { Link } from "react-router-dom";
 import {
   FaClock,
   FaCheckCircle,
@@ -125,6 +126,7 @@ const TEDashboard = () => {
 
       {/* Middle Action Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+        <Link to="/lots">
         <div className="bg-gray-400 hover:bg-gray-500 transition-all duration-300 rounded-2xl p-6 flex justify-between items-center shadow-lg">
           <div>
             <h2 className="text-xl font-bold text-white mb-1">Show Lots</h2>
@@ -134,7 +136,7 @@ const TEDashboard = () => {
             <FaPlus className="text-purple-600 text-2xl" />
           </div>
         </div>
-
+        </Link>
         <div className="bg-amber-100 hover:bg-amber-200 transition-all duration-300 rounded-2xl p-6 flex justify-between items-center shadow-lg">
           <div>
             <h2 className="text-lg font-bold text-gray-800 mb-1">Track your Order</h2>
