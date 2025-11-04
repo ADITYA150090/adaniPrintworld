@@ -1,8 +1,9 @@
 
 
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Sidebar from "../../components/Slidebar";
+import { Link } from "react-router-dom";
 import {
   FaClock,
   FaCheckCircle,
@@ -12,7 +13,7 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 
-import "../index.css";
+import "../../index.css";
 
 //mera api response 
 //{
@@ -30,6 +31,7 @@ const TEDashboard = () => {
   const [User, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   useEffect(() => {
     const getUserData = async () => {
@@ -61,7 +63,11 @@ const TEDashboard = () => {
     );
 
   return (
-    <div className="w-full min-h-screen text-gray-900 dash p-6 md:p-10">
+    <div className="flex dash px-5">
+       <Sidebar active={activeTab} onChange={setActiveTab} />
+
+    <div className="w-full min-h-screen text-gray-900 p-6 md:p-10">
+      
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-1">
@@ -107,7 +113,7 @@ const TEDashboard = () => {
             className={` bg-white shadow-lg rounded-2xl p-5 flex items-center justify-between transition-all duration-300 hover:scale-[1.02]`}
           >
             <div className="flex items-center gap-4">
-              <div className={`p-3 bg-gradient-to-br ${stat.color} rounded-full shadow`}>{stat.icon}</div>
+              <div className={`p-3 bg-linear-to-br ${stat.color} rounded-full shadow`}>{stat.icon}</div>
               <div>
                 <p className="font-semibold text-gray-700">{stat.name}</p>
                 <p className="text-xl font-bold">{stat.value}</p>
@@ -120,6 +126,7 @@ const TEDashboard = () => {
 
       {/* Middle Action Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+        <Link to="/lots">
         <div className="bg-gray-400 hover:bg-gray-500 transition-all duration-300 rounded-2xl p-6 flex justify-between items-center shadow-lg">
           <div>
             <h2 className="text-xl font-bold text-white mb-1">Show Lots</h2>
@@ -129,7 +136,7 @@ const TEDashboard = () => {
             <FaPlus className="text-purple-600 text-2xl" />
           </div>
         </div>
-
+        </Link>
         <div className="bg-amber-100 hover:bg-amber-200 transition-all duration-300 rounded-2xl p-6 flex justify-between items-center shadow-lg">
           <div>
             <h2 className="text-lg font-bold text-gray-800 mb-1">Track your Order</h2>
@@ -140,6 +147,7 @@ const TEDashboard = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

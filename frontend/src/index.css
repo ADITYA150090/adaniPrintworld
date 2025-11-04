@@ -6,12 +6,13 @@
   background-size: cover;
   background-position: center;
   overflow: hidden;
+  
 }
 
 
 .dash::before {
   content: "";
-  position: absolute;
+  position:fixed;
   inset: 0;
   background: inherit;
   filter: blur(10px);
