@@ -1,4 +1,13 @@
-day 1
-create 25-10-2025
+How Frontend Talks Now
 
-create landing page, and login registration  aslo create , sidebar component and dashboard page of officer
+Instead of calling:
+
+http://officer-auth:3001/login
+
+
+You’ll simply call:
+
+http://api-gateway:8080/officer/login
+
+
+Everything else — routing, authentication headers, etc. — is handled inside the gateway.
