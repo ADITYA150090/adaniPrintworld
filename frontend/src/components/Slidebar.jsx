@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { User, Home, Grid3x3, LogOut, ChevronRight, Menu, X } from "lucide-react";
-import {
-  FaCubes,     // lots icon
-} from "react-icons/fa6";
+import { useNavigate, useLocation } from "react-router-dom";
+import { LogOut, ChevronRight, Menu, X } from "lucide-react";
 
-const Sidebar = ({ active, onChange }) => {
-  const [isOpen, setIsOpen] = useState(true);
+
+const Sidebar = ({ isOpen, toggleSidebar ,items=[]}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
@@ -13,9 +13,7 @@ const Sidebar = ({ active, onChange }) => {
     const checkScreenSize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      if (!mobile) {
-        setShowMobileSidebar(false);
-      }
+      if (!mobile) setShowMobileSidebar(false);
     };
 
     checkScreenSize();
@@ -23,13 +21,17 @@ const Sidebar = ({ active, onChange }) => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const menuItems = [
-    { id: "dashboard", name: "Dashboard", icon: <Grid3x3 size={20} /> },
-    { id: "lots", name: "Lots", icon: <FaCubes size={20} /> },
-    { id: "profile", name: "Profile", icon: <User size={20} /> },
-  ];
+ const menuItems = Array.isArray(items) ? items : [];
 
-  // Mobile View
+  console.log("Sidebar items:", menuItems);
+
+  const activeRoute = location.pathname;
+  const handleNavigation = (path) => {
+    navigate(path);
+    if (isMobile) setShowMobileSidebar(false);
+  };
+
+  // ================= MOBILE SIDEBAR =================
   if (isMobile) {
     return (
       <>
@@ -44,12 +46,12 @@ const Sidebar = ({ active, onChange }) => {
         {/* Overlay */}
         {showMobileSidebar && (
           <div
-            className="fixed inset-0 bg-black/50 z-40"
+            className="fixed inset-0  z-40"
             onClick={() => setShowMobileSidebar(false)}
           />
         )}
 
-        {/* Mobile Sidebar */}
+        {/* Sidebar Drawer */}
         <div
           className={`fixed top-0 left-0 h-full w-64 bg-white/70 backdrop-blur-md border-r border-white/20 shadow-xl z-40 transform transition-transform duration-300 ${
             showMobileSidebar ? "translate-x-0" : "-translate-x-full"
@@ -61,24 +63,24 @@ const Sidebar = ({ active, onChange }) => {
               {menuItems.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => {
-                    onChange(item.id);
-                    setShowMobileSidebar(false);
-                  }}
+                  onClick={() => handleNavigation(item.path)}
                   className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-gray-700 font-medium transition-all duration-300 ${
-                    active === item.id
+                    activeRoute === item.path
                       ? "bg-[#cbc8e8] text-black"
                       : "bg-gray-50 hover:bg-gray-100"
                   }`}
                 >
-                  <div>{item.icon}</div>
+                  {item.icon}
                   <span className="text-sm">{item.name}</span>
                 </button>
               ))}
             </div>
 
-            {/* Logout Button */}
-            <button className="w-full flex items-center gap-3 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-300">
+            {/* Logout */}
+            <button
+              onClick={() => navigate("/logout")}
+              className="w-full flex items-center gap-3 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-300"
+            >
               <LogOut size={20} className="text-gray-600" />
               <span className="text-sm text-gray-700">Logout</span>
             </button>
@@ -88,7 +90,7 @@ const Sidebar = ({ active, onChange }) => {
     );
   }
 
-  // Desktop View
+  // ================= DESKTOP SIDEBAR =================
   return (
     <div
       className={`${
@@ -100,7 +102,7 @@ const Sidebar = ({ active, onChange }) => {
         {/* Toggle Button */}
         <div className="flex justify-end mb-4">
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={toggleSidebar}
             className="p-2 rounded-xl hover:bg-gray-100 transition-all"
           >
             <ChevronRight
@@ -110,14 +112,15 @@ const Sidebar = ({ active, onChange }) => {
             />
           </button>
         </div>
+
         {/* Menu Items */}
         <div className="flex flex-col gap-4">
           {menuItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => onChange(item.id)}
+              onClick={() => handleNavigation(item.path)}
               className={`flex items-center gap-3 w-full px-3 py-3 rounded-xl text-gray-700 font-medium transition-all duration-300 ${
-                active === item.id
+                activeRoute === item.path
                   ? "bg-[#cbc8e8] text-black"
                   : "bg-gray-50 hover:bg-gray-100"
               }`}
@@ -129,9 +132,12 @@ const Sidebar = ({ active, onChange }) => {
         </div>
       </div>
 
-      {/* Logout Button */}
+      {/* Logout */}
       <div className="flex justify-center md:justify-start">
-        <button className="w-full flex items-center justify-center md:justify-start gap-3 px-3 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-300">
+        <button
+          onClick={() => navigate("/logout")}
+          className="w-full flex items-center justify-center md:justify-start gap-3 px-3 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-300"
+        >
           <LogOut size={20} className="text-gray-600" />
           {isOpen && <span className="text-sm text-gray-700">Logout</span>}
         </button>
