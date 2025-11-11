@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    environment {
+        MONGODB_URI = credentials('mongodb-uri')
+        JWT_SECRET  = credentials('jwt-secret')
+        
+    }
+
+    stages {
+        stage('Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'npm ci'
+                    sh 'npm run lint'
+                    sh 'npm test'
+                }
+            }
+        }
+        stage('Backend') {
+            steps {
+                dir('backend') {
+                    sh 'npm ci'
+                    sh 'npm run lint'
+                    sh 'npm test'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                 sh "docker-compose -f docker-compose.yml up -d --build"
+                
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished!'
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
