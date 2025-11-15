@@ -1,18 +1,25 @@
-import express from 'express';
+require("dotenv").config();
+const express = require("express");
+const connectDB = require("./src/config/db");
+const authRoutes = require("./src/modules/auth/auth.routes");
 
 const app = express();
 
+// Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// Connect DB
+connectDB();
 
+// Routes
+app.use("/api/auth", authRoutes);
 
-app.get('/api/hello', (req, res) => {
-    res.json({ message: 'Hello from the backend!' });
+// Default route
+app.get("/", (req, res) => {
+    res.send("API is running...");
 });
 
-
-
-
-
-app.listen(5000, () => {
-    console.log('Server is running on http://localhost:5000');
-});
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
