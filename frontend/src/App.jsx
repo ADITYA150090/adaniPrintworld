@@ -18,6 +18,11 @@ import TotalOfficers from "./pages/TSE/TotalOfficers.jsx";
 import PendingLots from "./pages/TSE/PendingLot.jsx";
 import VerifyNameplate from "./pages/TSE/VerifyNameplates.jsx";
 import ApproveOfficers from "./pages/TSE/VerifyTE.jsx";
+import AdminLayout from "./layouts/AdminLayout.jsx";
+import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
+import TotalRMO from "./pages/Admin/TotalRMO.jsx";
+import VerifyRMO from "./pages/Admin/VerifyRmo.jsx";
+import PrintNameplates from "./pages/Admin/PrintNameplates.jsx";
 
 const App = () => {
   return (
@@ -44,6 +49,16 @@ const App = () => {
           <Route path="pendinglots/:lotno" element={<VerifyNameplate />} />
           <Route path="verifyofficers" element={<ApproveOfficers />} />
         </Route>
+
+        <Route path="/admin" element={<AdminLayout/>}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="totalRMO" element={<TotalRMO/>} />
+          <Route path="verifyRMO" element={<VerifyRMO />} />
+          <Route path="printnameplates" element={<PrintNameplates />} />
+          
+        </Route>
+
+
 
         {/* 🚫 404 Fallback */}
         <Route path="*" element={<PageNotFound />} />

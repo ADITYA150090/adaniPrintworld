@@ -5,14 +5,32 @@ const AllRoutesPage = () => {
   const navigate = useNavigate();
 
   const routes = [
+    // 🌐 Public Routes
     { path: "/", label: "🏠 Home" },
     { path: "/login", label: "🔑 Login" },
     { path: "/signup", label: "📝 Signup (TE)" },
     { path: "/Tsesignup", label: "🧑‍💼 Signup (TSE)" },
+
+    // 👨‍💻 Technical Executive (TE) Routes
     { path: "/TE", label: "📊 TE Dashboard" },
-    { path: "/TE/createnameplate", label: "🪧 Create Nameplate" },
     { path: "/TE/lots", label: "📦 Lots" },
     { path: "/TE/lots/OFF20105922", label: "📦 Lot Details" },
+    { path: "/TE/lots/OFF20105922/createnameplate", label: "🪧 Create Nameplate" },
+
+    // 🧑‍💼 Technical Senior Executive (TSE) Routes
+    { path: "/TSE", label: "📈 TSE Dashboard" },
+    { path: "/TSE/totalofficers", label: "👥 Total Officers" },
+    { path: "/TSE/pendinglots", label: "🕓 Pending Lots" },
+    { path: "/TSE/pendinglots/LOT12345", label: "🧾 Verify Nameplates (Lot Details)" },
+    { path: "/TSE/verifyofficers", label: "✅ Approve Officers" },
+
+    // 🧑‍💼 Admin Routes
+    { path: "/admin", label: "🧠 Admin Dashboard" },
+    { path: "/admin/totalRMO", label: "👨‍💼 Total RMOs" },
+    { path: "/admin/verifyRMO", label: "✅ Verify RMOs" },
+    { path: "/admin/printnameplates", label: "🖨️ Print Nameplates" },
+
+    // 🚫 404 Test Route
     { path: "/random", label: "🚫 Page Not Found (Test)" },
   ];
 
@@ -24,11 +42,11 @@ const AllRoutesPage = () => {
           🌐 All Routes Page
         </h1>
         <p className="text-gray-500 font-medium mt-2 text-sm sm:text-base">
-          Quick navigation to all routes in the app
+          Quick navigation to all pages in the app
         </p>
       </div>
 
-      {/* Routes Card */}
+      {/* Routes List */}
       <div className="w-full max-w-5xl bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {routes.map((route, index) => (
