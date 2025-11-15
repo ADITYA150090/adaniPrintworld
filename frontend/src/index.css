@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 .dash {
-  position: relative;
+  
   background-image: url('/images/bg.png');
   background-size: cover;
   background-position: center;
@@ -22,6 +22,6 @@
 
 
 .dash > * {
-  position: relative;
+  
   z-index: 1;
 }

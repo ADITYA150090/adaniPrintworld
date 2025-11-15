@@ -31,7 +31,6 @@ const TEDashboard = () => {
   const [User, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("dashboard");
 
   useEffect(() => {
     const getUserData = async () => {
@@ -51,8 +50,8 @@ const TEDashboard = () => {
 
   if (loading)
     return (
-      <div className="w-screen h-screen flex justify-center items-center bg-gray-900 text-white">
-        Loading...
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg text-gray-600">Loading lots...</p>
       </div>
     );
   if (error)
@@ -63,8 +62,7 @@ const TEDashboard = () => {
     );
 
   return (
-    <div className="flex dash px-5">
-       <Sidebar active={activeTab} onChange={setActiveTab} />
+   
 
     <div className="w-full min-h-screen text-gray-900 p-6 md:p-10">
       
@@ -126,7 +124,7 @@ const TEDashboard = () => {
 
       {/* Middle Action Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-        <Link to="/lots">
+        <Link to="lots">
         <div className="bg-gray-400 hover:bg-gray-500 transition-all duration-300 rounded-2xl p-6 flex justify-between items-center shadow-lg">
           <div>
             <h2 className="text-xl font-bold text-white mb-1">Show Lots</h2>
@@ -148,7 +146,7 @@ const TEDashboard = () => {
         </div>
       </div>
     </div>
-    </div>
+    
   );
 };
 
