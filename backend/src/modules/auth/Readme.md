@@ -1,132 +1,191 @@
-Authentication Module Documentation
+# 🔐 Authentication & User Verification System
+**Roles:** Admin | Head | Officer  
+**Tech:** Node.js, Express.js, MongoDB, Mongoose, Bcrypt, JWT, Crypto
 
-This module provides email-based authentication for three different user types:
+This backend module manages **authentication, email verification, and Officer approval flow**, including **role-based access** and **Head-specific officer visibility**.
 
-Admin
+---
 
-Head
+## 📌 Key Features
 
-Officer
+✔ User signup by role (Admin, Head, Officer)  
+✔ Email verification using token  
+✔ Auto-generate **TSE ID** for verified Heads (example: `TSE001`)  
+✔ Officers must use valid verified Head **TSE ID**  
+✔ Officer must be approved by assigned Head (or Admin)  
+✔ Password hashing using `bcrypt`  
+✔ JWT based authentication & authorization  
+✔ Head can view only **their own Officers**  
+✔ Admin can view **all officers**
 
-No role-based authorization is implemented — only userType identification.
+---
 
-The system includes:
+## 🧱 Roles & Rules
 
-✔ Signup
-✔ Email Verification (via PATCH link)
-✔ Login
-✔ JWT Authentication
-✔ Modular MVC + Services Structure
+| Role     | Verification | Special Restriction |
+|----------|-------------|---------------------|
+| Admin    | Email       | No dependency |
+| Head     | Email       | Gets auto TSE ID, must be unique |
+| Officer  | Email + Head Approval | Must signup using valid verified Head TSE ID |
 
-📁 Folder Structure
+---
+
+## 🧩 API Routes
+
+| Method | Endpoint | Protected | Description |
+|--------|----------|-----------|-------------|
+| POST | `/api/auth/signup/:type` | ❌ | Register Admin / Head / Officer |
+| PATCH | `/api/auth/verify-email?token=` | ❌ | Verify user email |
+| POST | `/api/auth/login` | ❌ | Login and receive JWT token |
+| PATCH | `/api/auth/approve-officer/:officerId` | ✔ (Head/Admin) | Approve Officer |
+| GET | `/api/auth/officers` | ✔ (Head/Admin) | Head → Only their officers<br>Admin → All officers |
+
+---
+
+## 🗂 Sample Requests
+
+### 1️⃣ **Head Registration**
+POST /api/auth/signup/head
+{
+"name": "John Doe",
+"number": "9999999999",
+"email": "head@gmail.com",
+"district": "Nagpur",
+"pincode": "440001",
+"password": "123456"
+}
+
+markdown
+Copy code
+
+### 2️⃣ **Verify Email**
+PATCH /api/auth/verify-email?token=PASTE_TOKEN_HERE
+
+yaml
+Copy code
+
+After verification → Head gets unique **TSE ID**, example: `TSE001`
+
+---
+
+### 3️⃣ **Officer Registration**
+POST /api/auth/signup/officer
+{
+"name": "Officer A",
+"email": "officer@gmail.com",
+"number": "8888888888",
+"address": "Nagpur",
+"tseId": "TSE001",
+"password": "123456"
+}
+
+yaml
+Copy code
+
+📌 Signup is only valid if:
+
+✔ TSE exists  
+✔ Belongs to a **verified** Head  
+
+---
+
+### 4️⃣ **Officer Email Verification**
+PATCH /api/auth/verify-email?token=OFFICER_TOKEN
+
+yaml
+Copy code
+
+Officer becomes **email verified**, but still not approved for login.
+
+---
+
+### 5️⃣ **Approve Officer** (Head/Admin only)
+PATCH /api/auth/approve-officer/:officerId
+
+makefile
+Copy code
+
+Example:
+/api/auth/approve-officer/679bfe4cbc76f2fb196b32c1
+
+yaml
+Copy code
+
+After success:  
+approvedByHead = true
+isVerified = true
+
+yaml
+Copy code
+
+---
+
+### 6️⃣ **Login**
+POST /api/auth/login
+{
+"email": "officer@gmail.com",
+"password": "123456"
+}
+
+makefile
+Copy code
+
+Response:
+{
+"success": true,
+"token": "xxxx.yyyy.zzzz",
+"user": { ... }
+}
+
+yaml
+Copy code
+
+---
+
+## 👁 Role-Based Officer Listing
+
+GET /api/auth/officers
+
+yaml
+Copy code
+
+| Role | Result |
+|------|---------|
+| Head | Only officers assigned to their TSE ID |
+| Admin | All officers |
+
+---
+
+## 📁 Folder Structure
+
 /src
- ├── config
- │     └── db.js
- ├── modules
- │     └── auth
- │          ├── auth.routes.js
- │          ├── controller
- │          │     └── auth.controller.js
- │          ├── model
- │          │     └── user.model.js
- │          └── service
- │                └── auth.service.js
- ├── utils
- │     └── sendEmail.js
- └── server.js
+├── modules
+│ └── auth
+│ ├── auth.controller.js
+│ ├── auth.service.js
+│ ├── auth.model.js
+│ └── auth.routes.js
+└── middleware
+└── auth.middleware.js
 
-🚀 Base URL Example
-http://localhost:5000/api/auth
+yaml
+Copy code
 
-🔐 Endpoints
-1️⃣ User Signup
+---
 
-Register a new user (admin, head, officer)
+## 🔐 Security Notes
 
-Endpoint
+✔ Use environment variables  
+✔ Hash passwords using `bcrypt`  
+✔ Never store tokens in DB without expiry  
+✔ Protect sensitive routes using `auth(role)`  
+✔ Officer cannot login unless BOTH `emailVerified === true` AND `approvedByHead === true`  
 
-POST /signup
+---
 
+## 📞 Support or Contribution
+Open to collaboration — feel free to contact or create feature request.
 
-Request Body
+---
 
-{
-  "name": "Aditya",
-  "email": "aditya@example.com",
-  "password": "123456",
-  "userType": "officer"
-}
-
-
-Success Response
-
-{
-  "status": true,
-  "message": "Signup successful. Check email to verify account."
-}
-
-2️⃣ Email Verification
-
-A clickable URL is sent to the user.
-User must verify account before login.
-
-Endpoint
-
-PATCH /verify/:token
-
-
-Success Response
-
-{
-  "status": true,
-  "message": "Account verified successfully"
-}
-
-3️⃣ Login (common for all users)
-
-Endpoint
-
-POST /login
-
-
-Request Body
-
-{
-  "email": "aditya@example.com",
-  "password": "123456"
-}
-
-
-Success Response
-
-{
-  "status": true,
-  "message": "Login successful",
-  "token": "jwt_token_here",
-  "data": {
-    "_id": "user_id",
-    "name": "Aditya",
-    "email": "aditya@example.com",
-    "userType": "officer"
-  }
-}
-
-🔑 Auth Token (Frontend Usage)
-
-Send token in header:
-
-Authorization: Bearer <jwt_token_here>
-
-🧪 Testing Steps (Postman / Thunder Client)
-Step	Action
-1	Send POST /signup with JSON body
-2	Check email inbox for verification link
-3	Click or PATCH verification route
-4	Send POST /login
-5	Store token in LocalStorage or Cookie
-6	Use token for protected routes
-🔁 Optional Endpoints (Not Included by Default)
-Feature	Method	Route
-Resend verification email	POST	/resend-verification
-Forgot password	POST	/forgot-password
-Reset password	PATCH	/reset/:token
+Would you like me to **add Swagger API docs** or **Postman Collection JSON 
