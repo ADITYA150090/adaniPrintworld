@@ -10,4 +10,9 @@ router.patch("/verify-email", controller.verifyEmail);
 // Common login
 router.post("/login", controller.login);
 
+
+// Approve officer
+router.patch("/approve-officer/:officerId", controller.approveOfficer);
+
+
 module.exports = router;

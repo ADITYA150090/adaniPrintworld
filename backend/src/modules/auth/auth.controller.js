@@ -1,4 +1,6 @@
 const authService = require("./auth.service");
+const { Admin, Head, Officer } = require("./auth.model");
+
 
 // ----------- REGISTER -----------
 exports.register = async(req, res) => {
@@ -48,5 +50,21 @@ exports.login = async(req, res) => {
         });
     } catch (err) {
         res.status(400).json({ success: false, error: err.message });
+    }
+};
+
+
+exports.approveOfficer = async(req, res) => {
+    try {
+        const officer = await Officer.findById(req.params.officerId);
+        if (!officer) return res.status(404).json({ error: "Officer not found" });
+
+        officer.approvedByHead = true;
+        officer.isVerified = true;
+        await officer.save();
+
+        res.json({ success: true, message: "Officer approved successfully" });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
     }
 };

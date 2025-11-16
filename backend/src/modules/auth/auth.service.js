@@ -16,6 +16,19 @@ async function signup(type, data) {
     const token = crypto.randomBytes(32).toString("hex");
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
+    if (type === "officer") {
+        // check if tseId exists and matches a verified head
+        const head = await Head.findOne({ tseId: data.tseId, isVerified: true });
+
+        if (!head) throw new Error("Invalid or unverified TSE ID");
+
+        // temporarily connect officer to head ID
+        data.headId = head._id;
+        data.approvedByHead = false;
+        data.isVerified = false; // email verification NOT final
+    }
+
+
     const user = await Model.create({
         ...data,
         password: hashedPassword,
@@ -42,6 +55,13 @@ async function verifyEmail(token) {
             }
 
             user.isVerified = true;
+            // After user.isVerified = true
+            if (Model === Head && !user.tseId) {
+                const count = await Head.countDocuments({ tseId: { $ne: null } });
+                const newId = "TSE" + String(count + 1).padStart(3, "0");
+                user.tseId = newId;
+            }
+
             user.verifyToken = null;
             user.verifyTokenExpiry = null;
             await user.save();
