@@ -1,21 +1,14 @@
 const authService = require("./auth.service");
-//const { Admin, Head, Officer } = require("./auth.model");
 const { Officer } = require("./auth.model");
 
-// ----------- REGISTER -----------
+// REGISTER
 exports.register = async(req, res) => {
     try {
         const { type } = req.params;
-
-        if (!["admin", "head", "officer"].includes(type)) {
-            return res.status(400).json({ message: "Invalid user type" });
-        }
-
         const user = await authService.signup(type, req.body);
-
         res.status(201).json({
             success: true,
-            message: `${type} registered successfully. Verify your email.`,
+            message: `${type} registered successfully. Verify email.`,
             data: user,
         });
     } catch (err) {
@@ -23,37 +16,27 @@ exports.register = async(req, res) => {
     }
 };
 
-// ----------- EMAIL VERIFY -----------
+// EMAIL VERIFY
 exports.verifyEmail = async(req, res) => {
     try {
         await authService.verifyEmail(req.query.token);
-
-        res.json({ success: true, message: "Email verified successfully" });
+        res.json({ success: true, message: "Email Verified" });
     } catch (err) {
         res.status(400).json({ success: false, error: err.message });
     }
 };
 
-// ----------- LOGIN -----------
+// LOGIN
 exports.login = async(req, res) => {
     try {
-        const { user, token } = await authService.login(
-            req.body.email,
-            req.body.password
-        );
-
-        res.json({
-            success: true,
-            message: "Login successful",
-            token,
-            user,
-        });
+        const { user, token } = await authService.login(req.body.email, req.body.password);
+        res.json({ success: true, message: "Login successful", user, token });
     } catch (err) {
         res.status(400).json({ success: false, error: err.message });
     }
 };
 
-
+// APPROVE OFFICER
 exports.approveOfficer = async(req, res) => {
     try {
         const officer = await Officer.findById(req.params.officerId);
@@ -63,49 +46,8 @@ exports.approveOfficer = async(req, res) => {
         officer.isVerified = true;
         await officer.save();
 
-        res.json({ success: true, message: "Officer approved successfully" });
+        res.json({ success: true, message: "Officer approved" });
     } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-};
-
-
-
-
-exports.getMyOfficers = async(req, res) => {
-    try {
-        const headId = req.user.id; // comes from auth middleware
-
-        const officers = await Officer.find({
-            headId: headId
-        }).select("-password -verifyToken -verifyTokenExpiry");
-
-        res.json({
-            success: true,
-            count: officers.length,
-            officers,
-        });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-};
-
-
-exports.getPendingOfficers = async(req, res) => {
-    try {
-        const headId = req.user.id;
-
-        const officers = await Officer.find({
-            headId: headId,
-            approvedByHead: false
-        }).select("-password -verifyToken -verifyTokenExpiry");
-
-        res.json({
-            success: true,
-            count: officers.length,
-            officers
-        });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(400).json({ success: false, error: err.message });
     }
 };

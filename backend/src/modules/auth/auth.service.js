@@ -6,97 +6,85 @@ const { Admin, Head, Officer } = require("./auth.model");
 function getModel(type) {
     if (type === "admin") return Admin;
     if (type === "head") return Head;
-    return Officer;
+    if (type === "officer") return Officer;
+    throw new Error("Invalid user role type");
 }
 
-// ------------------- SIGNUP -------------------
-async function signup(type, data) {
-    const Model = getModel(type);
+// ----------------- REGISTER -----------------
+exports.signup = async(type, data) => {
+    const Model = getModel(type.toLowerCase());
 
     const token = crypto.randomBytes(32).toString("hex");
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
+    // Special validation for officer
     if (type === "officer") {
-        // check if tseId exists and matches a verified head
         const head = await Head.findOne({ tseId: data.tseId, isVerified: true });
-
         if (!head) throw new Error("Invalid or unverified TSE ID");
 
-        // temporarily connect officer to head ID
         data.headId = head._id;
         data.approvedByHead = false;
-        data.isVerified = false; // email verification NOT final
+        data.isVerified = false;
     }
-
 
     const user = await Model.create({
         ...data,
         password: hashedPassword,
         verifyToken: token,
-        verifyTokenExpiry: Date.now() + 30 * 60 * 1000, // 30 min
+        verifyTokenExpiry: Date.now() + 30 * 60 * 1000,
     });
 
-    // TODO send email (nodemailer)
-    // sendVerificationEmail(user.email, token);
-
     return user;
-}
+};
 
-// ------------------- VERIFY EMAIL -------------------
-async function verifyEmail(token) {
+// ----------------- VERIFY EMAIL -----------------
+exports.verifyEmail = async(token) => {
     const models = [Admin, Head, Officer];
 
     for (const Model of models) {
         const user = await Model.findOne({ verifyToken: token });
 
-        if (user) {
-            if (user.verifyTokenExpiry < Date.now()) {
-                throw new Error("Verification link expired");
-            }
+        if (!user) continue;
 
-            user.isVerified = true;
-            // After user.isVerified = true
-            if (Model === Head && !user.tseId) {
-                const count = await Head.countDocuments({ tseId: { $ne: null } });
-                const newId = "TSE" + String(count + 1).padStart(3, "0");
-                user.tseId = newId;
-            }
-
-            user.verifyToken = null;
-            user.verifyTokenExpiry = null;
-            await user.save();
-            return user;
+        if (user.verifyTokenExpiry < Date.now()) {
+            throw new Error("Verification link expired");
         }
+
+        user.isVerified = true;
+
+        if (Model === Head && !user.tseId) {
+            const count = await Head.countDocuments({ tseId: { $ne: null } });
+            user.tseId = "TSE" + String(count + 1).padStart(3, "0");
+        }
+
+        user.verifyToken = null;
+        user.verifyTokenExpiry = null;
+        await user.save();
+
+        return user;
     }
 
     throw new Error("Invalid verification token");
-}
+};
 
-// ------------------- LOGIN -------------------
-async function login(email, password) {
+// ----------------- LOGIN -----------------
+exports.login = async(email, password) => {
     const models = [Admin, Head, Officer];
 
     for (const Model of models) {
         const user = await Model.findOne({ email });
+        if (!user) continue;
 
-        if (user) {
-            const match = await bcrypt.compare(password, user.password);
-            if (!match) throw new Error("Invalid password");
-            if (!user.isVerified) throw new Error("Email not verified");
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) throw new Error("Incorrect password");
+        if (!user.isVerified) throw new Error("Email not verified");
 
-            const token = jwt.sign({ id: user._id, type: Model.modelName },
-                process.env.JWT_SECRET, { expiresIn: "1d" }
-            );
+        const token = jwt.sign({ id: user._id, role: Model.modelName },
+            process.env.JWT_SECRET, { expiresIn: "1d" }
+        );
 
-            return { user, token };
-        }
+        return { user, token };
     }
 
     throw new Error("User not found");
-}
-
-module.exports = {
-    signup,
-    verifyEmail,
-    login,
 };
