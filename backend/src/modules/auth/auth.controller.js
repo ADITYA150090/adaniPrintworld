@@ -1,6 +1,6 @@
 const authService = require("./auth.service");
-const { Admin, Head, Officer } = require("./auth.model");
-
+//const { Admin, Head, Officer } = require("./auth.model");
+const { Officer } = require("./auth.model");
 
 // ----------- REGISTER -----------
 exports.register = async(req, res) => {
@@ -66,5 +66,46 @@ exports.approveOfficer = async(req, res) => {
         res.json({ success: true, message: "Officer approved successfully" });
     } catch (err) {
         res.status(400).json({ error: err.message });
+    }
+};
+
+
+
+
+exports.getMyOfficers = async(req, res) => {
+    try {
+        const headId = req.user.id; // comes from auth middleware
+
+        const officers = await Officer.find({
+            headId: headId
+        }).select("-password -verifyToken -verifyTokenExpiry");
+
+        res.json({
+            success: true,
+            count: officers.length,
+            officers,
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+
+exports.getPendingOfficers = async(req, res) => {
+    try {
+        const headId = req.user.id;
+
+        const officers = await Officer.find({
+            headId: headId,
+            approvedByHead: false
+        }).select("-password -verifyToken -verifyTokenExpiry");
+
+        res.json({
+            success: true,
+            count: officers.length,
+            officers
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
 };

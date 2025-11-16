@@ -1,127 +1,191 @@
-Authentication & User Verification System (Admin, Head, Officer)
+# 🔐 Authentication & User Verification System
+**Roles:** Admin | Head | Officer  
+**Tech:** Node.js, Express.js, MongoDB, Mongoose, Bcrypt, JWT, Crypto
 
-This backend module handles user registration, email verification, login, and officer approval workflow for three user types:
+This backend module manages **authentication, email verification, and Officer approval flow**, including **role-based access** and **Head-specific officer visibility**.
 
-Admin
+---
 
-Head
+## 📌 Key Features
 
-Officer
+✔ User signup by role (Admin, Head, Officer)  
+✔ Email verification using token  
+✔ Auto-generate **TSE ID** for verified Heads (example: `TSE001`)  
+✔ Officers must use valid verified Head **TSE ID**  
+✔ Officer must be approved by assigned Head (or Admin)  
+✔ Password hashing using `bcrypt`  
+✔ JWT based authentication & authorization  
+✔ Head can view only **their own Officers**  
+✔ Admin can view **all officers**
 
-Built using Node.js, Express.js, MongoDB (Mongoose), bcrypt, JWT & Crypto.
+---
 
-📌 Features
+## 🧱 Roles & Rules
 
-✔ Register different user roles
-✔ Email verification using token
-✔ Auto-generate TSE ID for verified Heads
-✔ Officer must match verified Head’s TSE ID
-✔ Officer needs approval from Head
-✔ Secure password hashing and JWT-based authentication
+| Role     | Verification | Special Restriction |
+|----------|-------------|---------------------|
+| Admin    | Email       | No dependency |
+| Head     | Email       | Gets auto TSE ID, must be unique |
+| Officer  | Email + Head Approval | Must signup using valid verified Head TSE ID |
 
-🚀 Available Routes
-Method	Endpoint	Description
-POST	/api/auth/signup/:type	Register Admin / Head / Officer
-PATCH	/api/auth/verify-email?token=	Verify email using token
-POST	/api/auth/login	Login and receive JWT
-PATCH	/api/auth/approve-officer/:officerId	Approve Officer (Only Head/Admin use)
-🧱 User Types
-Type	Verified By	Special Rules
-Admin	Email Only	No special link
-Head	Email → Auto TSE ID assigned	TSE ID unique
-Officer	Email + Head Approval	Must use valid verified Head TSE ID
-🗂 Sample Signup Request Bodies (Postman)
-1️⃣ Head Signup
+---
 
-POST → /api/auth/signup/head
+## 🧩 API Routes
 
+| Method | Endpoint | Protected | Description |
+|--------|----------|-----------|-------------|
+| POST | `/api/auth/signup/:type` | ❌ | Register Admin / Head / Officer |
+| PATCH | `/api/auth/verify-email?token=` | ❌ | Verify user email |
+| POST | `/api/auth/login` | ❌ | Login and receive JWT token |
+| PATCH | `/api/auth/approve-officer/:officerId` | ✔ (Head/Admin) | Approve Officer |
+| GET | `/api/auth/officers` | ✔ (Head/Admin) | Head → Only their officers<br>Admin → All officers |
+
+---
+
+## 🗂 Sample Requests
+
+### 1️⃣ **Head Registration**
+POST /api/auth/signup/head
 {
-  "name": "John Doe",
-  "number": "9999999999",
-  "email": "head@gmail.com",
-  "district": "Nagpur",
-  "pincode": "440001",
-  "password": "123456"
+"name": "John Doe",
+"number": "9999999999",
+"email": "head@gmail.com",
+"district": "Nagpur",
+"pincode": "440001",
+"password": "123456"
 }
 
-2️⃣ Verify Email (Head)
+markdown
+Copy code
 
-PATCH
-/api/auth/verify-email?token=PASTE_TOKEN_FROM_DATABASE
+### 2️⃣ **Verify Email**
+PATCH /api/auth/verify-email?token=PASTE_TOKEN_HERE
 
-📌 After verification, Head receives a unique tseId like TSE001
+yaml
+Copy code
 
-3️⃣ Officer Signup
+After verification → Head gets unique **TSE ID**, example: `TSE001`
 
-POST → /api/auth/signup/officer
+---
 
+### 3️⃣ **Officer Registration**
+POST /api/auth/signup/officer
 {
-  "name": "Officer A",
-  "email": "officer@gmail.com",
-  "number": "8888888888",
-  "address": "Nagpur",
-  "tseId": "TSE001",
-  "password": "123456"
+"name": "Officer A",
+"email": "officer@gmail.com",
+"number": "8888888888",
+"address": "Nagpur",
+"tseId": "TSE001",
+"password": "123456"
 }
 
+yaml
+Copy code
 
-🛈 Valid only if:
+📌 Signup is only valid if:
 
-TSE ID exists
+✔ TSE exists  
+✔ Belongs to a **verified** Head  
 
-Belongs to a verified Head
+---
 
-4️⃣ Verify Email (Officer)
+### 4️⃣ **Officer Email Verification**
 PATCH /api/auth/verify-email?token=OFFICER_TOKEN
 
+yaml
+Copy code
 
-Officer is now email verified but still needs Head approval.
+Officer becomes **email verified**, but still not approved for login.
 
-5️⃣ Approve Officer
+---
 
-PATCH → /api/auth/approve-officer/:officerId
+### 5️⃣ **Approve Officer** (Head/Admin only)
+PATCH /api/auth/approve-officer/:officerId
+
+makefile
+Copy code
 
 Example:
-
 /api/auth/approve-officer/679bfe4cbc76f2fb196b32c1
 
+yaml
+Copy code
 
-After successful approval:
-
+After success:  
 approvedByHead = true
 isVerified = true
 
-🔐 Login
+yaml
+Copy code
 
-POST → /api/auth/login
+---
 
+### 6️⃣ **Login**
+POST /api/auth/login
 {
-  "email": "officer@gmail.com",
-  "password": "123456"
+"email": "officer@gmail.com",
+"password": "123456"
 }
 
+makefile
+Copy code
 
-Returns JWT Token:
-
+Response:
 {
-  "success": true,
-  "token": "xxxx.yyyy.zzzz",
-  "user": { ... }
+"success": true,
+"token": "xxxx.yyyy.zzzz",
+"user": { ... }
 }
 
-📎 Folder Structure
-/auth
- ├── auth.controller.js
- ├── auth.service.js
- ├── auth.model.js
- └── auth.routes.js
+yaml
+Copy code
 
-🛡 Security Notes
+---
 
-Always store passwords hashed (bcrypt)
+## 👁 Role-Based Officer Listing
 
-Tokens are time-limited
+GET /api/auth/officers
 
-Officer cannot log in without approval
+yaml
+Copy code
 
-JWT required for protected routes
+| Role | Result |
+|------|---------|
+| Head | Only officers assigned to their TSE ID |
+| Admin | All officers |
+
+---
+
+## 📁 Folder Structure
+
+/src
+├── modules
+│ └── auth
+│ ├── auth.controller.js
+│ ├── auth.service.js
+│ ├── auth.model.js
+│ └── auth.routes.js
+└── middleware
+└── auth.middleware.js
+
+yaml
+Copy code
+
+---
+
+## 🔐 Security Notes
+
+✔ Use environment variables  
+✔ Hash passwords using `bcrypt`  
+✔ Never store tokens in DB without expiry  
+✔ Protect sensitive routes using `auth(role)`  
+✔ Officer cannot login unless BOTH `emailVerified === true` AND `approvedByHead === true`  
+
+---
+
+## 📞 Support or Contribution
+Open to collaboration — feel free to contact or create feature request.
+
+---
+
+Would you like me to **add Swagger API docs** or **Postman Collection JSON 
