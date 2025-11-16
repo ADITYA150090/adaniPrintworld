@@ -86,7 +86,7 @@ Success Response
 
 Endpoint
 
-POST /login
+POST https:/api/auth/login
 
 
 Request Body
