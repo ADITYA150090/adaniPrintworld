@@ -1,0 +1,18 @@
+version: 1
+applications:
+  - frontend:
+      appRoot: "frontend"           # <- matches your folder name exactly
+      phases:
+        preBuild:
+          commands:
+            - npm install
+        build:
+          commands:
+            - npm run build
+      artifacts:
+        baseDirectory: build        # <-- change "build" to "dist" or ".next" if your framework outputs there!
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*

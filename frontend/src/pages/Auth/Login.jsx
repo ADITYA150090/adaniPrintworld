@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
+ 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -33,34 +35,50 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!validate()) return;
 
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
+  try {
+    const res = await axios.post("http://localhost:10000/auth/login", formData);
 
-      setServerMsg(res.data.message);
+    setServerMsg(res.data.message);
 
-      // Save JWT token
-      localStorage.setItem("token", res.data.token);
+    // Save JWT token
+    localStorage.setItem("token", res.data.token);
 
-      console.log("Login Success:", res.data);
+    // Decode JWT to extract role
+    const decoded = jwtDecode(res.data.token);
+    const userRole = decoded.role;
 
-      // Clear form
-      setFormData({ email: "", password: "" });
+    console.log("User Role:", userRole);
 
-      // Optional redirect
-      // window.location.href = "/dashboard";
-
-    } catch (error) {
-      console.log("Login Error:", error.response?.data);
-
-      setServerMsg(
-        error.response?.data?.message || "Login failed. Please try again."
-      );
+    // Redirect based on role
+    if (userRole === "Head") {
+      window.location.href = "/TSE";
+    } 
+    else if (userRole === "Admin") {
+      window.location.href = "/admin";
+    } 
+    else if (userRole === "Officer") {
+      window.location.href = "/TE";
+    } 
+    else {
+      setServerMsg("Invalid role. Contact support.");
     }
-  };
+
+    // Clear form
+    setFormData({ email: "", password: "" });
+
+  } catch (error) {
+    console.log("Login Error:", error.response?.data);
+
+    setServerMsg(
+      error.response?.data?.message || "Login failed. Please try again."
+    );
+  }
+};
+
 
   return (
     <div className="dash min-h-screen flex items-center justify-center bg-gray-100 px-4">
