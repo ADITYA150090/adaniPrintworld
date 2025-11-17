@@ -1,5 +1,110 @@
-import React, { useState } from "react";
-import { User, Home, MapPin, Palette, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { User, Home, MapPin, Palette, ChevronLeft, ChevronRight, Type } from "lucide-react";
+
+const TextStyleControls = ({ style, setStyle, fonts, loadFont }) => {
+  const colorPalette = [
+    { name: "Gold", value: "rgb(255, 215, 0)" },
+    { name: "Red", value: "rgb(204, 0, 26)" },
+    { name: "White", value: "rgb(255, 255, 255)" },
+    { name: "Black", value: "rgb(0, 0, 0)" }
+  ];
+
+  return (
+    <div className="w-full mt-3 p-3 bg-gray-50 rounded-lg space-y-3">
+      {/* Color Palette */}
+      <div className="flex items-center gap-2">
+        <label className="text-xs md:text-sm font-medium w-20">Color:</label>
+        <div className="flex gap-2 flex-wrap">
+          {colorPalette.map((color) => (
+            <button
+              key={color.value}
+              onClick={() => setStyle({ ...style, color: color.value })}
+              className={`w-10 h-10 rounded-lg border-2 transition-all ${
+                style.color === color.value
+                  ? "border-blue-500 scale-110"
+                  : "border-gray-300 hover:scale-105"
+              }`}
+              style={{ backgroundColor: color.value }}
+              title={color.name}
+            >
+              {style.color === color.value && (
+                <span className="text-xs">✓</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Font Size Slider */}
+      <div className="flex items-center gap-2">
+        <label className="text-xs md:text-sm font-medium w-20">Size:</label>
+        <input
+          type="range"
+          min="12"
+          max="60"
+          value={style.fontSize}
+          onChange={(e) => setStyle({ ...style, fontSize: parseInt(e.target.value) })}
+          className="flex-1"
+        />
+        <span className="text-xs text-gray-600 w-10">{style.fontSize}px</span>
+      </div>
+
+      {/* Font Family Dropdown */}
+      <div className="flex items-center gap-2">
+        <label className="text-xs md:text-sm font-medium w-20">Font:</label>
+        <select
+          value={style.fontFamily}
+          onChange={(e) => {
+            loadFont(e.target.value);
+            setStyle({ ...style, fontFamily: e.target.value });
+          }}
+          className="flex-1 border border-gray-300 rounded-lg p-1.5 text-xs md:text-sm"
+        >
+          {fonts.map((font) => (
+            <option key={font} value={font} style={{ fontFamily: font }}>
+              {font}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Bold and Italic Toggles */}
+      <div className="flex items-center gap-3">
+        <label className="text-xs md:text-sm font-medium w-20">Style:</label>
+        <button
+          onClick={() =>
+            setStyle({
+              ...style,
+              fontWeight: style.fontWeight === "bold" ? "normal" : "bold",
+            })
+          }
+          className={`px-3 py-1.5 text-xs md:text-sm rounded-lg border font-bold ${
+            style.fontWeight === "bold"
+              ? "bg-gray-700 text-white border-gray-700"
+              : "bg-white border-gray-300"
+          }`}
+        >
+          B
+        </button>
+        <button
+          onClick={() =>
+            setStyle({
+              ...style,
+              fontStyle: style.fontStyle === "italic" ? "normal" : "italic",
+            })
+          }
+          className={`px-3 py-1.5 text-xs md:text-sm rounded-lg border italic ${
+            style.fontStyle === "italic"
+              ? "bg-gray-700 text-white border-gray-700"
+              : "bg-white border-gray-300"
+          }`}
+        >
+          I
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const NameplateDesigner = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -9,13 +114,82 @@ const NameplateDesigner = () => {
   const [address, setAddress] = useState("");
   const [houseName, setHouseName] = useState("");
 
-  // Replace with your actual images
-  const images = [
-    { id: 1, url: "/images/d1 (1).webp" },
-    { id: 2, url: "/images/d2 (1).webp" },
-    { id: 3, url: "/images/d3 (1).webp" },
-    { id: 4, url: "/images/d4 (1).webp" }
+  // Text styling states for each field
+  const [nameStyle, setNameStyle] = useState({
+    color: "rgb(255, 255, 255)",
+    fontSize: 32,
+    fontWeight: "bold",
+    fontStyle: "normal",
+    fontFamily: "Inter"
+  });
+
+  const [addressStyle, setAddressStyle] = useState({
+    color: "rgb(255, 255, 255)",
+    fontSize: 18,
+    fontWeight: "normal",
+    fontStyle: "normal",
+    fontFamily: "Inter"
+  });
+
+  const [houseStyle, setHouseStyle] = useState({
+    color: "rgb(255, 255, 255)",
+    fontSize: 18,
+    fontWeight: "600",
+    fontStyle: "normal",
+    fontFamily: "Inter"
+  });
+
+  const [loadedFonts, setLoadedFonts] = useState(new Set(["Inter"]));
+
+  // Popular Google Fonts
+  const googleFonts = [
+    "Inter", "Roboto", "Open Sans", "Lato", "Montserrat", "Oswald",
+    "Raleway", "Poppins", "Playfair Display", "Merriweather", "Nunito",
+    "Ubuntu", "PT Sans", "Crimson Text", "Dancing Script", "Pacifico",
+    "Lobster", "Great Vibes", "Righteous", "Bebas Neue", "Shadows Into Light",
+    "Abril Fatface", "Anton", "Cinzel", "Cormorant Garamond", "Satisfy"
   ];
+
+  // Theme-based images
+  const themeImages = {
+    Ambuja: [
+      { id: 1, url: "/ambuja/d1.webp" },
+      { id: 2, url: "/ambuja/d2.webp" },
+      { id: 3, url: "/ambuja/d3.webp" },
+      { id: 4, url: "/ambuja/d4.webp" }
+    ],
+    ACC: [
+      { id: 1, url: "/acc/d1.webp" },
+      { id: 2, url: "/acc/d2.webp" },
+      { id: 3, url: "/acc/d3.webp" },
+      { id: 4, url: "/acc/d4.webp" }
+    ]
+  };
+
+  // Get current images based on selected theme
+  const images = themeImages[theme];
+
+  // Load Google Font dynamically
+  const loadFont = (fontFamily) => {
+    if (!loadedFonts.has(fontFamily)) {
+      const link = document.createElement("link");
+      link.href = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, "+")}:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap`;
+      link.rel = "stylesheet";
+      document.head.appendChild(link);
+      setLoadedFonts(new Set([...loadedFonts, fontFamily]));
+    }
+  };
+
+  useEffect(() => {
+    loadFont(nameStyle.fontFamily);
+    loadFont(addressStyle.fontFamily);
+    loadFont(houseStyle.fontFamily);
+  }, [nameStyle.fontFamily, addressStyle.fontFamily, houseStyle.fontFamily]);
+
+  // Reset current index when theme changes
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [theme]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -32,17 +206,21 @@ const NameplateDesigner = () => {
       address,
       houseName,
       selectedImage: images[currentIndex].url,
+      nameStyle,
+      addressStyle,
+      houseStyle
     });
+    alert("Nameplate design submitted! Check console for details.");
   };
 
   return (
-    <div className="w-full flex flex-col items-center px-4 py-6 md:py-8">
+    <div className="w-full min-h-screen flex flex-col items-center px-4 py-6 md:py-8">
       {/* Nameplate Preview with Navigation Arrows */}
       <div className="relative w-full max-w-[700px] aspect-[1.47] flex items-center justify-center">
         {/* Left Arrow */}
         <button
           onClick={handlePrev}
-          className="absolute left-1 md:left-2 bg-white/60 hover:bg-white/80 text-black rounded-full p-1.5 md:p-2 shadow-md z-10"
+          className="absolute left-1 md:left-2 bg-white/60 hover:bg-white/80 text-black rounded-full p-1.5 md:p-2 shadow-md z-10 transition-all"
         >
           <ChevronLeft size={20} className="md:w-7 md:h-7" />
         </button>
@@ -55,13 +233,40 @@ const NameplateDesigner = () => {
             className="w-full h-full object-cover"
           />
           {/* Dynamic Texts */}
-          <p className="absolute top-10 md:top-10 right-5 md:right-18 text-white text-sm md:text-lg font-semibold drop-shadow-md">
+          <p 
+            className="absolute top-10 md:top-10 right-5 md:right-18 drop-shadow-md whitespace-pre-wrap"
+            style={{
+              color: houseStyle.color,
+              fontSize: `${houseStyle.fontSize}px`,
+              fontWeight: houseStyle.fontWeight,
+              fontStyle: houseStyle.fontStyle,
+              fontFamily: houseStyle.fontFamily
+            }}
+          >
             {houseName}
           </p>
-          <p className="absolute inset-0 flex justify-center items-center text-xl md:text-3xl font-bold text-white drop-shadow-lg px-4 text-center">
+          <p 
+            className="absolute inset-0 flex justify-center items-center drop-shadow-lg px-4 text-center whitespace-pre-wrap"
+            style={{
+              color: nameStyle.color,
+              fontSize: `${nameStyle.fontSize}px`,
+              fontWeight: nameStyle.fontWeight,
+              fontStyle: nameStyle.fontStyle,
+              fontFamily: nameStyle.fontFamily
+            }}
+          >
             {name}
           </p>
-          <p className="absolute bottom-10 md:bottom-10 inset-x-0 text-center text-white text-sm md:text-lg drop-shadow-md px-4">
+          <p 
+            className="absolute bottom-10 md:bottom-10 inset-x-0 text-center drop-shadow-md px-4 whitespace-pre-wrap"
+            style={{
+              color: addressStyle.color,
+              fontSize: `${addressStyle.fontSize}px`,
+              fontWeight: addressStyle.fontWeight,
+              fontStyle: addressStyle.fontStyle,
+              fontFamily: addressStyle.fontFamily
+            }}
+          >
             {address}
           </p>
         </div>
@@ -69,51 +274,58 @@ const NameplateDesigner = () => {
         {/* Right Arrow */}
         <button
           onClick={handleNext}
-          className="absolute right-1 md:right-2 bg-white/60 hover:bg-white/80 text-black rounded-full p-1.5 md:p-2 shadow-md z-10"
+          className="absolute right-1 md:right-2 bg-white/60 hover:bg-white/80 text-black rounded-full p-1.5 md:p-2 shadow-md z-10 transition-all"
         >
           <ChevronRight size={20} className="md:w-7 md:h-7" />
         </button>
       </div>
 
       {/* Designer Controls */}
-      <div className="bg-white/80 mt-4 md:mt-6 p-4 md:p-6 rounded-xl md:rounded-2xl shadow-lg w-full max-w-[700px]">
+      <div className="bg-white/90 mt-4 md:mt-6 p-4 md:p-6 rounded-xl md:rounded-2xl shadow-lg w-full max-w-[700px]">
         {activeTab === "theme" && (
           <div className="flex flex-col items-center gap-3 md:gap-4">
             <h3 className="font-medium text-sm md:text-base">Select Theme</h3>
             <div className="flex gap-2 md:gap-3 flex-wrap justify-center">
               <button
                 onClick={() => setTheme("Ambuja")}
-                className={`px-4 md:px-5 py-2 rounded-xl border text-sm md:text-base ${
+                className={`px-4 md:px-5 py-2 rounded-xl border text-sm md:text-base transition-all ${
                   theme === "Ambuja"
                     ? "bg-gray-300 border-gray-400"
-                    : "bg-white border-gray-300"
+                    : "bg-white border-gray-300 hover:bg-gray-50"
                 }`}
               >
                 Ambuja
               </button>
               <button
                 onClick={() => setTheme("ACC")}
-                className={`px-4 md:px-5 py-2 rounded-xl border text-sm md:text-base ${
+                className={`px-4 md:px-5 py-2 rounded-xl border text-sm md:text-base transition-all ${
                   theme === "ACC"
                     ? "bg-gray-300 border-gray-400"
-                    : "bg-white border-gray-300"
+                    : "bg-white border-gray-300 hover:bg-gray-50"
                 }`}
               >
                 ACC
               </button>
             </div>
+          
           </div>
         )}
 
         {activeTab === "name" && (
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <label className="font-medium text-sm md:text-base">Enter Name</label>
-            <input
-              type="text"
+            <textarea
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="border border-gray-400 rounded-xl p-2 w-full md:w-3/4 text-center text-sm md:text-base"
+              className="border border-gray-400 rounded-xl p-2 w-full md:w-3/4 text-center text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
               placeholder="Enter your name"
+              rows="3"
+            />
+            <TextStyleControls 
+              style={nameStyle} 
+              setStyle={setNameStyle} 
+              fonts={googleFonts}
+              loadFont={loadFont}
             />
           </div>
         )}
@@ -121,12 +333,18 @@ const NameplateDesigner = () => {
         {activeTab === "address" && (
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <label className="font-medium text-sm md:text-base">Enter Address</label>
-            <input
-              type="text"
+            <textarea
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="border border-gray-400 rounded-xl p-2 w-full md:w-3/4 text-center text-sm md:text-base"
+              className="border border-gray-400 rounded-xl p-2 w-full md:w-3/4 text-center text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
               placeholder="Enter your address"
+              rows="3"
+            />
+            <TextStyleControls 
+              style={addressStyle} 
+              setStyle={setAddressStyle} 
+              fonts={googleFonts}
+              loadFont={loadFont}
             />
           </div>
         )}
@@ -134,57 +352,65 @@ const NameplateDesigner = () => {
         {activeTab === "house" && (
           <div className="flex flex-col items-center gap-2 md:gap-3">
             <label className="font-medium text-sm md:text-base">Enter House Name</label>
-            <input
-              type="text"
+            <textarea
               value={houseName}
               onChange={(e) => setHouseName(e.target.value)}
-              className="border border-gray-400 rounded-xl p-2 w-full md:w-3/4 text-center text-sm md:text-base"
+              className="border border-gray-400 rounded-xl p-2 w-full md:w-3/4 text-center text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
               placeholder="Enter your house name"
+              rows="3"
+            />
+            <TextStyleControls 
+              style={houseStyle} 
+              setStyle={setHouseStyle} 
+              fonts={googleFonts}
+              loadFont={loadFont}
             />
           </div>
         )}
 
         {/* Submit Button */}
-        <div className={`${activeTab === "house" ? "block" : "hidden"} mt-4 md:mt-6 flex justify-center`}>
+        {
+          activeTab == "house" ?<div className="mt-4 md:mt-6 flex justify-center">
           <button
             onClick={handleSubmit}
-            className="bg-gray-900 text-white px-5 md:px-6 py-2 rounded-xl hover:bg-gray-700 transition-all text-sm md:text-base"
+            className="bg-gray-900 text-white px-6 md:px-8 py-2.5 rounded-xl hover:bg-gray-700 transition-all text-sm md:text-base shadow-md"
           >
-            Submit
+            Submit Design
           </button>
-        </div>
+        </div> : null
+        }
       </div>
 
       {/* Bottom Navigation */}
-      <div className="flex justify-center gap-2 md:gap-4 mt-4 md:mt-6 bg-white/80 p-2 md:p-3 rounded-xl md:rounded-2xl shadow-md flex-wrap">
+      <div className="flex justify-center gap-2 md:gap-4 mt-4 md:mt-6 bg-white/90 p-2 md:p-3 rounded-xl md:rounded-2xl shadow-md flex-wrap">
         <button
           onClick={() => setActiveTab("theme")}
-          className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm ${
-            activeTab === "theme" ? "bg-gray-300" : "bg-white"
+          className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition-all ${
+            activeTab === "theme" ? "bg-gray-300" : "bg-white hover:bg-gray-50"
           }`}
         >
           <Palette size={16} className="md:w-[18px] md:h-[18px]" /> Theme
         </button>
         <button
           onClick={() => setActiveTab("name")}
-          className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm ${
-            activeTab === "name" ? "bg-gray-300" : "bg-white"
+          className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition-all ${
+            activeTab === "name" ? "bg-gray-300" : "bg-white hover:bg-gray-50"
           }`}
         >
           <User size={16} className="md:w-[18px] md:h-[18px]" /> Name
         </button>
         <button
           onClick={() => setActiveTab("address")}
-          className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm ${
-            activeTab === "address" ? "bg-gray-300" : "bg-white"
+          className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition-all ${
+            activeTab === "address" ? "bg-gray-300" : "bg-white hover:bg-gray-50"
           }`}
         >
           <MapPin size={16} className="md:w-[18px] md:h-[18px]" /> Address
         </button>
         <button
           onClick={() => setActiveTab("house")}
-          className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm ${
-            activeTab === "house" ? "bg-gray-300" : "bg-white"
+          className={`flex items-center gap-1 md:gap-2 px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition-all ${
+            activeTab === "house" ? "bg-gray-300" : "bg-white hover:bg-gray-50"
           }`}
         >
           <Home size={16} className="md:w-[18px] md:h-[18px]" /> House Name
