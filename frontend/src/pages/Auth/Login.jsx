@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,7 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [serverMsg, setServerMsg] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,6 +16,7 @@ const Login = () => {
 
   const validate = () => {
     let newErrors = {};
+
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -30,18 +33,33 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    console.log("Login Details:", formData);
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
 
-    // 🚀 In production, you would send a POST request to your backend here
-    // Example:
-    // await axios.post("/api/login", formData);
+      setServerMsg(res.data.message);
 
-    // For now, just clear the form
-    setFormData({ email: "", password: "" });
+      // Save JWT token
+      localStorage.setItem("token", res.data.token);
+
+      console.log("Login Success:", res.data);
+
+      // Clear form
+      setFormData({ email: "", password: "" });
+
+      // Optional redirect
+      // window.location.href = "/dashboard";
+
+    } catch (error) {
+      console.log("Login Error:", error.response?.data);
+
+      setServerMsg(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
+    }
   };
 
   return (
@@ -50,6 +68,17 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Login to Your Account
         </h2>
+
+        {/* Server Response Message */}
+        {serverMsg && (
+          <p
+            className={`text-center mb-4 text-sm ${
+              serverMsg.includes("successful") ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {serverMsg}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Email */}
@@ -111,10 +140,7 @@ const Login = () => {
 
         <p className="text-center text-sm text-gray-500 mt-6">
           Don’t have an account?{" "}
-          <a
-            href="/signup"
-            className="text-blue-600 hover:underline font-medium"
-          >
+          <a href="/signup" className="text-blue-600 hover:underline font-medium">
             Sign up
           </a>
         </p>
