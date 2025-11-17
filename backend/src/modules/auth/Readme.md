@@ -38,7 +38,7 @@ This backend module manages **authentication, email verification, and Officer ap
 | PATCH | `/api/auth/verify-email?token=` | ❌ | Verify user email |
 | POST | `/api/auth/login` | ❌ | Login and receive JWT token |
 | PATCH | `/api/auth/approve-officer/:officerId` | ✔ (Head/Admin) | Approve Officer |
-| GET | `/api/auth/officers` | ✔ (Head/Admin) | Head → Only their officers<br>Admin → All officers |
+| GET | `/api/auth/officers/` | ✔ (Head/Admin) | Head → Only their officers<br>Admin → All officers |
 
 ---
 
