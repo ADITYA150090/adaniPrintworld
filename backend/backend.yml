@@ -9,4 +9,4 @@ applications:
       cache:
         paths:
           - .npm/**/*
-      appRoot: backend
+      appRoot: "backend"
