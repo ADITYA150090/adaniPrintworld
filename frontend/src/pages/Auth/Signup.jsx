@@ -7,6 +7,7 @@ const Signup = () => {
     number: "",
     address: "",
     password: "",
+    tseId: "",       // ✅ Added TSE ID
   });
 
   const [errors, setErrors] = useState({});
@@ -30,6 +31,8 @@ const Signup = () => {
     else if (!/^[0-9]{10}$/.test(formData.number))
       newErrors.number = "Mobile number must be 10 digits";
 
+    if (!formData.tseId.trim()) newErrors.tseId = "TSE ID is required"; // ✅ Validation added
+
     if (!formData.address.trim()) newErrors.address = "Address is required";
 
     if (!formData.password.trim()) newErrors.password = "Password is required";
@@ -41,15 +44,35 @@ const Signup = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    console.log("Signup Details:", formData);
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/signup/officer",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData), // ✅ sends TSE ID too
+        }
+      );
 
-    // 🚀 In production, you can send the data to your backend here
-    // Example:
-    // await axios.post("/api/signup", formData);
+      const data = await response.json();
+      console.log("Server Response:", data);
+
+      if (!response.ok) {
+        alert(data.message || "Signup failed");
+        return;
+      }
+
+      alert("Signup successful! Please verify your email.");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong");
+    }
 
     // Reset form
     setFormData({
@@ -58,17 +81,19 @@ const Signup = () => {
       number: "",
       address: "",
       password: "",
+      tseId: "",
     });
   };
 
   return (
-    <div className=" dash min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="dash min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Create Your Account
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -82,11 +107,9 @@ const Signup = () => {
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
                 errors.name ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              } rounded-lg`}
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-            )}
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
 
           {/* Email */}
@@ -102,11 +125,9 @@ const Signup = () => {
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
                 errors.email ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              } rounded-lg`}
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
 
           {/* Mobile Number */}
@@ -122,12 +143,29 @@ const Signup = () => {
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
                 errors.number ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              } rounded-lg`}
             />
-            {errors.number && (
-              <p className="text-red-500 text-sm mt-1">{errors.number}</p>
-            )}
+            {errors.number && <p className="text-red-500 text-sm mt-1">{errors.number}</p>}
           </div>
+
+          {/* TSE ID — NEW FIELD */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              TSE ID
+            </label>
+            <input
+              type="text"
+              name="tseId"
+              placeholder="Enter your TSE ID"
+              value={formData.tseId}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 border ${
+                errors.tseId ? "border-red-500" : "border-gray-300"
+              } rounded-lg`}
+            />
+            {errors.tseId && <p className="text-red-500 text-sm mt-1">{errors.tseId}</p>}
+          </div>
+
           {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -141,11 +179,9 @@ const Signup = () => {
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
                 errors.password ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              } rounded-lg`}
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
 
           {/* Address */}
@@ -160,17 +196,13 @@ const Signup = () => {
               onChange={handleChange}
               className={`w-full px-4 py-2 border ${
                 errors.address ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              } rounded-lg`}
               rows="2"
             ></textarea>
-            {errors.address && (
-              <p className="text-red-500 text-sm mt-1">{errors.address}</p>
-            )}
+            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
           </div>
 
-          
-
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
             className="w-full py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-700 transition duration-200"
