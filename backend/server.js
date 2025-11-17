@@ -4,6 +4,7 @@ const authRoutes = require("./src/modules/auth/auth.routes");
 const adminRoutes = require("./src/modules/admin/admin.routes");
 const headRoutes = require("./src/modules/head/head.routes");
 const officerRoutes = require("./src/modules/officer/officer.routes");
+const nameplateRoutes = require("./src/modules/nameplate/nameplate.routes")
 const cors = require("cors");
 
 const app = express();
@@ -17,11 +18,15 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 
 // Routes
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
+
 
 app.use("/admin", adminRoutes);
 app.use("/head", headRoutes);
 app.use("/officer", officerRoutes);
+
+
+app.use("/api/nameplate", nameplateRoutes);
 
 // Default route
 app.get("/api", (req, res) => {

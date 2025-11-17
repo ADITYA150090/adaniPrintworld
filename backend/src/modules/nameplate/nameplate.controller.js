@@ -1,15 +1,51 @@
-// controllers/certificate.controller.js
-const Nameplate = require("../models/nameplate.model");
+const nameplateService = require("./nameplate.service");
 
-exports.createNameplate = async(req, res) => {
-    try {
-        const newData = await Nameplate.create(req.body);
-        res.status(201).json({
-            success: true,
-            message: "Nameplate saved",
-            data: newData,
-        });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+class NameplateController {
+    async create(req, res) {
+        try {
+            const nameplate = await nameplateService.create(req.body);
+            res.status(201).json(nameplate);
+        } catch (err) {
+            res.status(400).json({ error: err.message });
+        }
     }
-};
+
+    async getAll(req, res) {
+        try {
+            const nameplates = await nameplateService.getAll();
+            res.json(nameplates);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
+
+    async getById(req, res) {
+        try {
+            const nameplate = await nameplateService.getById(req.params.id);
+            if (!nameplate) return res.status(404).json({ error: "Not found" });
+            res.json(nameplate);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
+
+    async approve(req, res) {
+        try {
+            const nameplate = await nameplateService.approve(req.params.id, req.body.approvedBy);
+            res.json(nameplate);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
+
+    async reject(req, res) {
+        try {
+            const nameplate = await nameplateService.reject(req.params.id);
+            res.json(nameplate);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
+}
+
+module.exports = new NameplateController();
