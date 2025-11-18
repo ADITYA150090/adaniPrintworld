@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { User, Home, MapPin, Palette, ChevronLeft, ChevronRight, Type } from "lucide-react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+const { lotId } = useParams();
+
 
 const TextStyleControls = ({ style, setStyle, fonts, loadFont }) => {
   const colorPalette = [
@@ -107,6 +111,7 @@ const TextStyleControls = ({ style, setStyle, fonts, loadFont }) => {
 };
 
 const NameplateDesigner = () => {
+  const { lotId } = useParams(); 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("theme");
   const [theme, setTheme] = useState("Ambuja");
@@ -199,19 +204,33 @@ const NameplateDesigner = () => {
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
-  const handleSubmit = () => {
-    console.log({
-      theme,
-      name,
-      address,
-      houseName,
-      selectedImage: images[currentIndex].url,
-      nameStyle,
-      addressStyle,
-      houseStyle
-    });
-    alert("Nameplate design submitted! Check console for details.");
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:10000/officer/lot/${lotId}/nameplate`,
+        {
+          theme,
+          name,
+          address,
+          houseName,
+          selectedImage: images[currentIndex].url,
+          nameStyle,
+          addressStyle,
+          houseStyle
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        }
+      );
+      alert("Nameplate saved!");
+    } catch (error) {
+      console.error("Nameplate Error:", error);
+      alert("Failed to save nameplate");
+    }
   };
+  
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center px-4 py-6 md:py-8">

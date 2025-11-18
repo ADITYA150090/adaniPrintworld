@@ -15,9 +15,12 @@ const Lots = () => {
   useEffect(() => {
     const fetchLots = async () => {
       try {
-        const response = await fetch(
-          "https://68fca03096f6ff19b9f5c42c.mockapi.io/lots"
-        );
+        const response = await fetch("http://localhost:10000/officer/lot", {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          }
+        });
+    
         if (!response.ok) throw new Error("Failed to fetch lots");
         const data = await response.json();
         setLots(data);
@@ -27,6 +30,7 @@ const Lots = () => {
         setLoading(false);
       }
     };
+    
     fetchLots();
   }, []);
 
@@ -34,42 +38,29 @@ const Lots = () => {
   const handleCreateLot = async () => {
     if (isCreating) return;
     setIsCreating(true);
-
+  
     try {
-      // Find the highest lotno and increment
-      const maxLotNo =
-        lots.length > 0
-          ? Math.max(...lots.map((lot) => parseInt(lot.lotno) || 0))
-          : 0;
-
-      const newLotNo = maxLotNo + 1;
-
-      const newLot = {
-        lotno: newLotNo,
-        createdAt: Math.floor(Date.now() / 1000),
-      };
-
-      const response = await fetch(
-        "https://68fca03096f6ff19b9f5c42c.mockapi.io/lots",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newLot),
-        }
-      );
-
+      const response = await fetch("http://localhost:10000/officer/lot", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({})
+      });
+  
       if (!response.ok) throw new Error("Failed to create new lot");
+  
       const created = await response.json();
-
-      // Add the new lot at the top of the list
       setLots((prev) => [created, ...prev]);
+      
     } catch (err) {
       alert("Error creating lot: " + (err.message || String(err)));
-      console.error(err);
     } finally {
       setIsCreating(false);
     }
   };
+  
 
   if (loading)
     return (

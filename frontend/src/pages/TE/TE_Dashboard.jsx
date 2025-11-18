@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../../components/Slidebar";
@@ -15,18 +13,6 @@ import {
 
 import "../../index.css";
 
-//mera api response 
-//{
-//   "unverified": 12,
-//   "verified": 27,
-//   "ontransit": 21,
-//   "delivered": 41,
-//   "TE_id": "FakerBot/0.9.6",
-//   "id": "1"
-// }
-
-
-
 const TEDashboard = () => {
   const [User, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,16 +21,33 @@ const TEDashboard = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await axios.get(
-          "https://68fca03096f6ff19b9f5c42c.mockapi.io/unverified/1"
-        );
-        setUser(response.data);
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          setError("Token missing, please login again.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await axios.get("http://localhost:10000/officer/dashboard", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.data.success) {
+          setUser(response.data.data);
+        } else {
+          setError("Failed to fetch data");
+        }
+
       } catch (err) {
-        setError(err);
+        setError(err.message || "Server Error");
       } finally {
         setLoading(false);
       }
     };
+
     getUserData();
   }, []);
 
@@ -54,24 +57,25 @@ const TEDashboard = () => {
         <p className="text-lg text-gray-600">Loading lots...</p>
       </div>
     );
+
   if (error)
     return (
       <div className="w-screen h-screen flex justify-center items-center bg-gray-900 text-white">
-        Error: {error.message}
+        Error: {error}
       </div>
     );
 
   return (
-   
-
     <div className="w-full min-h-screen text-gray-900 p-6 md:p-10">
-      
+
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-1">
           Technical Executive Dashboard
         </h1>
-        <span className="text-gray-900 text-md">{User?.TE_id || "user id"}</span>
+        <span className="text-gray-900 text-md">
+          {User?.officerId || "User"}
+        </span>
       </div>
 
       {/* Top Stats */}
@@ -111,7 +115,9 @@ const TEDashboard = () => {
             className={` bg-white shadow-lg rounded-2xl p-5 flex items-center justify-between transition-all duration-300 hover:scale-[1.02]`}
           >
             <div className="flex items-center gap-4">
-              <div className={`p-3 bg-linear-to-br ${stat.color} rounded-full shadow`}>{stat.icon}</div>
+              <div className={`p-3 bg-linear-to-br ${stat.color} rounded-full shadow`}>
+                {stat.icon}
+              </div>
               <div>
                 <p className="font-semibold text-gray-700">{stat.name}</p>
                 <p className="text-xl font-bold">{stat.value}</p>
@@ -125,15 +131,15 @@ const TEDashboard = () => {
       {/* Middle Action Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
         <Link to="lots">
-        <div className="bg-gray-400 hover:bg-gray-500 transition-all duration-300 rounded-2xl p-6 flex justify-between items-center shadow-lg">
-          <div>
-            <h2 className="text-xl font-bold text-white mb-1">Show Lots</h2>
-            <p className="text-md text-white">Create new Lots</p>
+          <div className="bg-gray-400 hover:bg-gray-500 transition-all duration-300 rounded-2xl p-6 flex justify-between items-center shadow-lg">
+            <div>
+              <h2 className="text-xl font-bold text-white mb-1">Show Lots</h2>
+              <p className="text-md text-white">Create new Lots</p>
+            </div>
+            <div className="bg-white p-4 rounded-full shadow">
+              <FaPlus className="text-purple-600 text-2xl" />
+            </div>
           </div>
-          <div className="bg-white p-4 rounded-full shadow">
-            <FaPlus className="text-purple-600 text-2xl" />
-          </div>
-        </div>
         </Link>
         <div className="bg-amber-100 hover:bg-amber-200 transition-all duration-300 rounded-2xl p-6 flex justify-between items-center shadow-lg">
           <div>
@@ -146,7 +152,6 @@ const TEDashboard = () => {
         </div>
       </div>
     </div>
-    
   );
 };
 

@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
 
 
 app.use("/admin", adminRoutes);

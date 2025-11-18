@@ -1,28 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaUsers,
   FaClipboardList,
   FaUserCheck
 } from "react-icons/fa";
-
+import axios from "axios";
 import "../../index.css";
 
 const TSEDashboard = () => {
   const navigate = useNavigate();
 
-  const User = {
-    TE_id: "TSE_Head_01",
-    totalOfficers: 15,
-    pendingLots: 9,
-    verifyofficer: 4,
+  const [dashboard, setDashboard] = useState({
+    totalOfficers: 0,
+    pendingLots: 0,
+    verifyOfficers: 0,
+  });
+
+  const fetchDashboard = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get("http://localhost:10000/head/dashboard", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const apiData = res.data.data;
+
+      setDashboard({
+        totalOfficers: apiData.totalOfficers || 0,
+        pendingLots: 0, // You don't have this yet
+        verifyOfficers: apiData.pendingOfficers || 0,
+      });
+
+    } catch (error) {
+      console.log("Dashboard Fetch Error:", error);
+    }
   };
+
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
 
   const stats = [
     {
       id: 1,
       name: "Total Officers",
-      value: User.totalOfficers,
+      value: dashboard.totalOfficers,
       icon: <FaUsers className="text-blue-500 text-2xl sm:text-3xl" />,
       color: "from-blue-100 to-blue-50",
       route: "totalofficers",
@@ -30,7 +56,7 @@ const TSEDashboard = () => {
     {
       id: 2,
       name: "Pending Lots",
-      value: User.pendingLots,
+      value: dashboard.pendingLots,
       icon: <FaClipboardList className="text-yellow-500 text-2xl sm:text-3xl" />,
       color: "from-yellow-100 to-yellow-50",
       route: "pendinglots",
@@ -38,10 +64,10 @@ const TSEDashboard = () => {
     {
       id: 3,
       name: "Verify Officers",
-      value: User.verifyofficer,
+      value: dashboard.verifyOfficers,
       icon: <FaUserCheck className="text-green-500 text-2xl sm:text-3xl" />,
       color: "from-green-100 to-green-50",
-      route: "VerifyOfficers",
+      route: "verifyofficers",
     },
   ];
 
@@ -53,7 +79,6 @@ const TSEDashboard = () => {
         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
           Technical Senior Executive Dashboard
         </h1>
-        <span className="text-gray-700 text-sm sm:text-base">{User.TE_id}</span>
       </div>
 
       {/* Stats */}

@@ -4,6 +4,7 @@ exports.dashboard = async(req, res) => {
     try {
         const data = await service.getAdminStats();
         res.json({ success: true, data });
+        // res.json({ nameplates: "15" });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
