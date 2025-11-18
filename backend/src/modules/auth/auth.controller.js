@@ -12,6 +12,14 @@ exports.register = async(req, res) => {
             data: user,
         });
     } catch (err) {
+        // Handle Mongoose duplicate key error (E11000)
+        if (err.code === 11000) {
+            const field = Object.keys(err.keyPattern)[0];
+            return res.status(400).json({ 
+                success: false, 
+                error: `${field} already exists` 
+            });
+        }
         res.status(400).json({ success: false, error: err.message });
     }
 };
@@ -19,7 +27,11 @@ exports.register = async(req, res) => {
 // EMAIL VERIFY
 exports.verifyEmail = async(req, res) => {
     try {
-        await authService.verifyEmail(req.query.token);
+        const token = req.query.token;
+        if (!token) {
+            return res.status(400).json({ success: false, error: "Token is required" });
+        }
+        await authService.verifyEmail(token);
         res.json({ success: true, message: "Email Verified" });
     } catch (err) {
         res.status(400).json({ success: false, error: err.message });

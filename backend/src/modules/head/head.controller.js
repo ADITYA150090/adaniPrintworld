@@ -14,6 +14,7 @@ exports.approveOfficer = async(req, res) => {
         const result = await service.approveOfficer(req.params.officerId, req.user.id);
         res.json({ success: true, message: result });
     } catch (err) {
-        res.status(400).json({ success: false, error: err.message });
+        const statusCode = err.message.includes('not found') ? 404 : 400;
+        res.status(statusCode).json({ success: false, error: err.message });
     }
 };

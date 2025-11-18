@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1763472566496" clover="3.2.0">
+  <project timestamp="1763472566497" name="All files">
+    <metrics statements="342" coveredstatements="291" conditionals="58" coveredconditionals="36" methods="52" coveredmethods="49" elements="452" coveredelements="376" complexity="0" loc="342" ncloc="342" packages="10" files="25" classes="25"/>
+    <package name="backend">
+      <metrics statements="28" coveredstatements="25" conditionals="6" coveredconditionals="2" methods="2" coveredmethods="1"/>
+      <file name="server.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\server.js">
+        <metrics statements="28" coveredstatements="25" conditionals="6" coveredconditionals="2" methods="2" coveredmethods="1"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="7" type="stmt"/>
+        <line num="5" count="7" type="stmt"/>
+        <line num="6" count="7" type="stmt"/>
+        <line num="7" count="7" type="stmt"/>
+        <line num="8" count="7" type="stmt"/>
+        <line num="9" count="7" type="stmt"/>
+        <line num="11" count="7" type="stmt"/>
+        <line num="14" count="7" type="stmt"/>
+        <line num="15" count="7" type="stmt"/>
+        <line num="16" count="7" type="stmt"/>
+        <line num="19" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="24" count="7" type="stmt"/>
+        <line num="27" count="7" type="stmt"/>
+        <line num="28" count="7" type="stmt"/>
+        <line num="29" count="7" type="stmt"/>
+        <line num="32" count="7" type="stmt"/>
+        <line num="33" count="7" type="stmt"/>
+        <line num="36" count="7" type="stmt"/>
+        <line num="37" count="2" type="stmt"/>
+        <line num="38" count="2" type="stmt"/>
+        <line num="42" count="7" type="stmt"/>
+        <line num="45" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="46" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="47" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.config">
+      <metrics statements="7" coveredstatements="5" conditionals="12" coveredconditionals="8" methods="1" coveredmethods="0"/>
+      <file name="db.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\config\db.js">
+        <metrics statements="5" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+      </file>
+      <file name="environment.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\config\environment.js">
+        <metrics statements="2" coveredstatements="2" conditionals="12" coveredconditionals="8" methods="0" coveredmethods="0"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="4" count="7" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.middleware">
+      <metrics statements="18" coveredstatements="16" conditionals="6" coveredconditionals="6" methods="3" coveredmethods="3"/>
+      <file name="auth.middleware.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\middleware\auth.middleware.js">
+        <metrics statements="18" coveredstatements="16" conditionals="6" coveredconditionals="6" methods="3" coveredmethods="3"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="38" type="stmt"/>
+        <line num="6" count="38" type="cond" truecount="4" falsecount="0"/>
+        <line num="7" count="9" type="stmt"/>
+        <line num="10" count="29" type="stmt"/>
+        <line num="12" count="29" type="stmt"/>
+        <line num="13" count="29" type="stmt"/>
+        <line num="14" count="29" type="stmt"/>
+        <line num="15" count="29" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="22" count="7" type="stmt"/>
+        <line num="23" count="105" type="stmt"/>
+        <line num="24" count="29" type="cond" truecount="2" falsecount="0"/>
+        <line num="25" count="8" type="stmt"/>
+        <line num="27" count="21" type="stmt"/>
+        <line num="32" count="7" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.modules.admin">
+      <metrics statements="21" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+      <file name="admin.controller.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\admin\admin.controller.js">
+        <metrics statements="11" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="13" count="7" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+      </file>
+      <file name="admin.routes.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\admin\admin.routes.js">
+        <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="5" count="7" type="stmt"/>
+        <line num="6" count="7" type="stmt"/>
+        <line num="8" count="7" type="stmt"/>
+      </file>
+      <file name="admin.service.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\admin\admin.service.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="9" count="7" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.modules.auth">
+      <metrics statements="87" coveredstatements="67" conditionals="26" coveredconditionals="15" methods="8" coveredmethods="8"/>
+      <file name="auth.controller.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\auth\auth.controller.js">
+        <metrics statements="27" coveredstatements="24" conditionals="2" coveredconditionals="2" methods="4" coveredmethods="4"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="5" count="7" type="stmt"/>
+        <line num="6" count="5" type="stmt"/>
+        <line num="7" count="5" type="stmt"/>
+        <line num="8" count="5" type="stmt"/>
+        <line num="9" count="4" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="20" count="7" type="stmt"/>
+        <line num="21" count="3" type="stmt"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="25" count="3" type="stmt"/>
+        <line num="30" count="7" type="stmt"/>
+        <line num="31" count="4" type="stmt"/>
+        <line num="32" count="4" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="35" count="4" type="stmt"/>
+        <line num="40" count="7" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="43" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+      </file>
+      <file name="auth.model.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\auth\auth.model.js">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="4" count="7" type="stmt"/>
+        <line num="14" count="7" type="stmt"/>
+        <line num="28" count="7" type="stmt"/>
+        <line num="42" count="7" type="stmt"/>
+      </file>
+      <file name="auth.routes.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\auth\auth.routes.js">
+        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="6" count="7" type="stmt"/>
+        <line num="7" count="7" type="stmt"/>
+        <line num="8" count="7" type="stmt"/>
+        <line num="11" count="7" type="stmt"/>
+        <line num="13" count="7" type="stmt"/>
+      </file>
+      <file name="auth.service.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\auth\auth.service.js">
+        <metrics statements="47" coveredstatements="30" conditionals="24" coveredconditionals="13" methods="4" coveredmethods="4"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="7" type="stmt"/>
+        <line num="7" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="8" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="9" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="14" count="7" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="17" count="4" type="stmt"/>
+        <line num="18" count="4" type="stmt"/>
+        <line num="21" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="25" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="30" count="4" type="stmt"/>
+        <line num="37" count="4" type="stmt"/>
+        <line num="41" count="7" type="stmt"/>
+        <line num="42" count="3" type="stmt"/>
+        <line num="44" count="3" type="stmt"/>
+        <line num="45" count="9" type="stmt"/>
+        <line num="47" count="9" type="cond" truecount="1" falsecount="1"/>
+        <line num="49" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="55" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="56" count="0" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="61" count="0" type="stmt"/>
+        <line num="62" count="0" type="stmt"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="67" count="3" type="stmt"/>
+        <line num="71" count="7" type="stmt"/>
+        <line num="72" count="4" type="stmt"/>
+        <line num="74" count="4" type="stmt"/>
+        <line num="75" count="8" type="stmt"/>
+        <line num="76" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="78" count="2" type="stmt"/>
+        <line num="79" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="80" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="82" count="0" type="stmt"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="89" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.modules.dashboard">
+      <metrics statements="32" coveredstatements="29" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
+      <file name="dashboard.controller.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\dashboard\dashboard.controller.js">
+        <metrics statements="16" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="21" count="7" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+      </file>
+      <file name="dashboard.routes.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\dashboard\dashboard.routes.js">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="6" count="7" type="stmt"/>
+        <line num="9" count="7" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="14" count="7" type="stmt"/>
+      </file>
+      <file name="dashboard.service.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\dashboard\dashboard.service.js">
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="11" count="7" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="21" count="7" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.modules.head">
+      <metrics statements="39" coveredstatements="31" conditionals="4" coveredconditionals="3" methods="5" coveredmethods="5"/>
+      <file name="head.controller.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\head\head.controller.js">
+        <metrics statements="11" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="14" count="2" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="17" count="2" type="stmt"/>
+      </file>
+      <file name="head.routes.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\head\head.routes.js">
+        <metrics statements="19" coveredstatements="17" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="7" type="stmt"/>
+        <line num="7" count="7" type="stmt"/>
+        <line num="10" count="7" type="stmt"/>
+        <line num="13" count="7" type="stmt"/>
+        <line num="14" count="3" type="stmt"/>
+        <line num="15" count="3" type="stmt"/>
+        <line num="20" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="37" count="7" type="stmt"/>
+      </file>
+      <file name="head.service.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\head\head.service.js">
+        <metrics statements="9" coveredstatements="5" conditionals="2" coveredconditionals="1" methods="2" coveredmethods="2"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="9" count="7" type="stmt"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="12" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.modules.lot">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="lot.model.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\lot\lot.model.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="9" count="7" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.modules.nameplate">
+      <metrics statements="43" coveredstatements="38" conditionals="2" coveredconditionals="1" methods="10" coveredmethods="10"/>
+      <file name="nameplate.controller.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\nameplate\nameplate.controller.js">
+        <metrics statements="23" coveredstatements="18" conditionals="2" coveredconditionals="1" methods="5" coveredmethods="5"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
+        <line num="6" count="3" type="stmt"/>
+        <line num="7" count="2" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="14" count="2" type="stmt"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="25" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="35" count="2" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="42" count="2" type="stmt"/>
+        <line num="43" count="2" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="51" count="7" type="stmt"/>
+      </file>
+      <file name="nameplate.model.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\nameplate\nameplate.model.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="44" count="7" type="stmt"/>
+      </file>
+      <file name="nameplate.routes.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\nameplate\nameplate.routes.js">
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="6" count="7" type="stmt"/>
+        <line num="9" count="7" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="15" count="7" type="stmt"/>
+        <line num="18" count="7" type="stmt"/>
+        <line num="20" count="7" type="stmt"/>
+      </file>
+      <file name="nameplate.service.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\nameplate\nameplate.service.js">
+        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
+        <line num="6" count="3" type="stmt"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="24" count="2" type="stmt"/>
+        <line num="30" count="7" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.modules.officer">
+      <metrics statements="64" coveredstatements="58" conditionals="2" coveredconditionals="1" methods="13" coveredmethods="12"/>
+      <file name="officer.controller.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\officer\officer.controller.js">
+        <metrics statements="35" coveredstatements="29" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="21" count="7" type="stmt"/>
+        <line num="22" count="2" type="stmt"/>
+        <line num="23" count="2" type="stmt"/>
+        <line num="24" count="2" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="30" count="7" type="stmt"/>
+        <line num="31" count="2" type="stmt"/>
+        <line num="32" count="2" type="stmt"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="40" count="7" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="50" count="7" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+      </file>
+      <file name="officer.routes.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\officer\officer.routes.js">
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="3" count="7" type="stmt"/>
+        <line num="5" count="7" type="stmt"/>
+        <line num="7" count="7" type="stmt"/>
+        <line num="8" count="7" type="stmt"/>
+        <line num="10" count="7" type="stmt"/>
+        <line num="11" count="7" type="stmt"/>
+        <line num="13" count="7" type="stmt"/>
+        <line num="15" count="7" type="stmt"/>
+      </file>
+      <file name="officer.service.js" path="C:\Users\USER\Desktop\adaniPrintworld\backend\src\modules\officer\officer.service.js">
+        <metrics statements="19" coveredstatements="19" conditionals="2" coveredconditionals="1" methods="7" coveredmethods="6"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="4" count="7" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="16" count="7" type="stmt"/>
+        <line num="17" count="2" type="stmt"/>
+        <line num="20" count="7" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="24" count="7" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="28" count="7" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="32" count="7" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

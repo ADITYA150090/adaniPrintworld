@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { User, Home, MapPin, Palette, ChevronLeft, ChevronRight, Type } from "lucide-react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-const { lotId } = useParams();
+
 
 
 const TextStyleControls = ({ style, setStyle, fonts, loadFont }) => {

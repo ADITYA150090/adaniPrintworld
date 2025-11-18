@@ -18,6 +18,10 @@ exports.getAllLots = async(officerId) => {
 };
 
 exports.createNameplate = async(lotId, payload) => {
+    const lot = await Lot.findById(lotId);
+    if (!lot) {
+        throw new Error("Lot not found");
+    }
     return Nameplate.create({ lotId, ...payload });
 };
 

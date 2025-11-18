@@ -1,10 +1,14 @@
 const router = require("express").Router();
 const controller = require("./dashboard.controller");
-const auth = require("../../middleware/auth.middleware");
-const role = require("../../middleware/role.middleware");
+const { auth, authorize } = require("../../middleware/auth.middleware");
 
-router.get("/admin", auth, role("Admin"), controller.adminDashboard);
-router.get("/head", auth, role("Head"), controller.headDashboard);
-router.get("/officer", auth, role("Officer"), controller.officerDashboard);
+// Admin Dashboard
+router.get("/admin", auth, authorize("Admin"), controller.adminDashboard);
+
+// Head Dashboard
+router.get("/head", auth, authorize("Head"), controller.headDashboard);
+
+// Officer Dashboard
+router.get("/officer", auth, authorize("Officer"), controller.officerDashboard);
 
 module.exports = router;

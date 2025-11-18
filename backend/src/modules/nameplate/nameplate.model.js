@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const nameplateSchema = new mongoose.Schema({
     lotId: { type: mongoose.Schema.Types.ObjectId, ref: "Lot", required: true },
 
@@ -39,3 +40,5 @@ const nameplateSchema = new mongoose.Schema({
 
     createdAt: { type: Date, default: Date.now }
 });
+
+module.exports = mongoose.model("Nameplate", nameplateSchema);

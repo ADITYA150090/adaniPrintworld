@@ -34,7 +34,8 @@ class NameplateController {
             const nameplate = await nameplateService.approve(req.params.id, req.body.approvedBy);
             res.json(nameplate);
         } catch (err) {
-            res.status(500).json({ error: err.message });
+            const statusCode = err.message.includes('not found') ? 404 : 500;
+            res.status(statusCode).json({ error: err.message });
         }
     }
 
@@ -43,7 +44,8 @@ class NameplateController {
             const nameplate = await nameplateService.reject(req.params.id);
             res.json(nameplate);
         } catch (err) {
-            res.status(500).json({ error: err.message });
+            const statusCode = err.message.includes('not found') ? 404 : 500;
+            res.status(statusCode).json({ error: err.message });
         }
     }
 }

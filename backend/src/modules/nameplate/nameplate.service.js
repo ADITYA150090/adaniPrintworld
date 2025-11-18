@@ -15,15 +15,19 @@ class NameplateService {
     }
 
     async approve(id, approvedById) {
-        return await Nameplate.findByIdAndUpdate(
+        const nameplate = await Nameplate.findByIdAndUpdate(
             id, { approvalStatus: "Approved", approvedBy: approvedById, approvedAt: new Date() }, { new: true }
         );
+        if (!nameplate) throw new Error("Nameplate not found");
+        return nameplate;
     }
 
     async reject(id) {
-        return await Nameplate.findByIdAndUpdate(
+        const nameplate = await Nameplate.findByIdAndUpdate(
             id, { approvalStatus: "Rejected" }, { new: true }
         );
+        if (!nameplate) throw new Error("Nameplate not found");
+        return nameplate;
     }
 }
 

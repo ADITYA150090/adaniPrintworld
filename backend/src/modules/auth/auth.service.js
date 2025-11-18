@@ -14,6 +14,15 @@ function getModel(type) {
 exports.signup = async(type, data) => {
     const Model = getModel(type.toLowerCase());
 
+    // Check for duplicate email across all user models
+    const allModels = [Admin, Head, Officer];
+    for (const checkModel of allModels) {
+        const existingUser = await checkModel.findOne({ email: data.email });
+        if (existingUser) {
+            throw new Error("Email already exists");
+        }
+    }
+
     const token = crypto.randomBytes(32).toString("hex");
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
