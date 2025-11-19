@@ -6,6 +6,8 @@ const { auth, authorize } = require("../../middleware/auth.middleware");
 router.post("/signup/:type", controller.register);
 router.patch("/verify-email", controller.verifyEmail);
 router.post("/login", controller.login);
+router.get("/profile", auth, controller.getProfile);
+
 
 // Protected
 router.patch("/approve-officer/:officerId", auth, authorize("Head"), controller.approveOfficer);
