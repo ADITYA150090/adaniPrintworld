@@ -5,7 +5,7 @@ const adminRoutes = require("./src/modules/admin/admin.routes");
 const headRoutes = require("./src/modules/head/head.routes");
 const officerRoutes = require("./src/modules/officer/officer.routes");
 const nameplateRoutes = require("./src/modules/nameplate/nameplate.routes");
-const dashboardRoutes = require("./src/modules/dashboard/dashboard.routes");
+// const dashboardRoutes = require("./src/modules/dashboard/dashboard.routes");
 const cors = require("cors");
 
 const app = express();
@@ -30,7 +30,7 @@ app.use("/officer", officerRoutes);
 
 
 app.use("/api/nameplate", nameplateRoutes);
-app.use("/dashboard", dashboardRoutes);
+// app.use("/dashboard", dashboardRoutes);
 
 // Default route
 app.get("/api", (req, res) => {

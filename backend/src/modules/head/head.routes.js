@@ -1,36 +1,25 @@
 const router = require("express").Router();
 const controller = require("./head.controller");
 const { auth, authorize } = require("../../middleware/auth.middleware");
-const { Officer } = require("../auth/auth.model");
 
-// Dashboard (only Head)
+// Dashboard 1
 router.get("/dashboard", auth, authorize("Head"), controller.dashboard);
 
-// Approve Officer
-router.patch("/approve/:officerId", auth, authorize("Head"), controller.approveOfficer);
+// Verified officers 2
+router.get("/officers", auth, authorize("Head"), controller.getVerifiedOfficers);
 
-// Reject Officer
-router.patch("/reject/:officerId", auth, authorize("Head"), async(req, res) => {
-    try {
-        const officer = await Officer.findOne({
-            _id: req.params.officerId,
-            headId: req.user.id,
-        });
+// Unverified officers 3
+router.get("/unverifiedofficers", auth, authorize("Head"), controller.getUnverifiedOfficers);
 
-        if (!officer) {
-            return res.status(404).json({ success: false, message: "Officer not found" });
-        }
+// Approve / Reject officers 4 5
+router.patch("/officers/:id/approve", auth, authorize("Head"), controller.approveOfficer);
+router.patch("/officers/:id/reject", auth, authorize("Head"), controller.rejectOfficer);
 
-        officer.approvedByHead = false;
-        officer.isVerified = false;
+// Unverified lots 6
+router.get("/lots", auth, authorize("Head"), controller.getUnverifiedLots);
 
-        await officer.save();
-
-        res.json({ success: true, message: "Officer rejected successfully" });
-    } catch (err) {
-        console.error("Reject Error:", err.message);
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
+// Approve / Reject lots 7 8
+router.patch("/lots/:id/approve", auth, authorize("Head"), controller.approveLot);
+router.patch("/lots/:id/reject", auth, authorize("Head"), controller.rejectLot);
 
 module.exports = router;
