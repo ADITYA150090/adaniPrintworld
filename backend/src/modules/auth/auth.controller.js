@@ -1,6 +1,5 @@
 const authService = require("./auth.service");
-const { Officer } = require("./auth.model");
-
+const { Admin, Head, Officer } = require("../auth/auth.model");
 // REGISTER
 exports.register = async(req, res) => {
     try {
@@ -15,9 +14,9 @@ exports.register = async(req, res) => {
         // Handle Mongoose duplicate key error (E11000)
         if (err.code === 11000) {
             const field = Object.keys(err.keyPattern)[0];
-            return res.status(400).json({ 
-                success: false, 
-                error: `${field} already exists` 
+            return res.status(400).json({
+                success: false,
+                error: `${field} already exists`
             });
         }
         res.status(400).json({ success: false, error: err.message });
@@ -61,5 +60,35 @@ exports.approveOfficer = async(req, res) => {
         res.json({ success: true, message: "Officer approved" });
     } catch (err) {
         res.status(400).json({ success: false, error: err.message });
+    }
+};
+
+
+exports.getProfile = async(req, res) => {
+    try {
+        // ID & role comes from JWT token (auth middleware)
+        const userId = req.user.id;
+        const role = req.user.role;
+
+        // Load model based on role
+        let Model = null;
+        if (role === "Admin") Model = Admin;
+        if (role === "Head") Model = Head;
+        if (role === "Officer") Model = Officer;
+
+        if (!Model) {
+            return res.status(400).json({ success: false, error: "Invalid role" });
+        }
+
+        const user = await Model.findById(userId).select("-password -verifyToken -verifyTokenExpiry");
+
+        if (!user) {
+            return res.status(404).json({ success: false, error: "User not found" });
+        }
+
+        res.json({ success: true, data: user });
+
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
 };
