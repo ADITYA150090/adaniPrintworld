@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { getAdminDashboard } from "../../api";
 import { FaUserShield, FaPrint, FaUserCheck } from "react-icons/fa";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  
+
   const [adminData, setAdminData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -19,24 +19,23 @@ const AdminDashboard = () => {
       return;
     }
 
-    axios.get("http://localhost:10000/admin/dashboard", {
-      headers: {
-        Authorization: `Bearer ${token}`
+    const fetchDashboard = async () => {
+      try {
+        const res = await getAdminDashboard();
+        setAdminData({
+          totalHeads: res.data.data.totalHeads,
+          totalofficers: res.data.data.totalofficers,
+          pendingOfficers: res.data.data.pendingOfficers
+        });
+        setLoading(false);
+      } catch(err) {
+        setError("Unauthorized or session expired. Please login again.");
+        setLoading(false);
+        setTimeout(() => navigate("/login"), 1500);
       }
-    })
-    .then(res => {
-      setAdminData({
-        totalHeads: res.data.data.totalHeads,
-        totalOfficers: res.data.data.totalOfficers,
-        pendingOfficers: res.data.data.pendingOfficers
-      });
-      setLoading(false);
-    })
-    .catch(err => {
-      setError("Unauthorized or session expired. Please login again.");
-      setLoading(false);
-      setTimeout(() => navigate("/login"), 1500);
-    });
+    };
+
+    fetchDashboard();
   }, [navigate]);
 
   if (loading) return <p className="text-center text-lg font-semibold">Loading...</p>;
@@ -55,10 +54,10 @@ const AdminDashboard = () => {
     {
       id: 2,
       name: "Total Officers",
-      value: adminData.totalOfficers,
+      value: adminData.totalofficers,
       icon: <FaPrint className="text-green-500 text-3xl sm:text-4xl" />,
       bg: "from-green-100 to-green-50",
-      route: "total-officers", 
+      route: "totalofficers", 
     },
     {
       id: 3,

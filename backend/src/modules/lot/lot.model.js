@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
 
 const lotSchema = new mongoose.Schema({
-    lotNo: { type: Number, required: true, unique: true },
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "Officer", required: true },
-    createdAt: { type: Date, default: Date.now }
+    lotno: { type: String, required: true, unique: true },
+    officerId: { type: mongoose.Schema.Types.ObjectId, ref: "Officer", required: true },
+    headId: { type: mongoose.Schema.Types.ObjectId, ref: "Head", required: true },
+    isDeleted: { type: Boolean, default: false },
+    createdAt: { type: Number, default: () => Date.now() / 1000 },
+    updatedAt: { type: Number, default: () => Date.now() / 1000 }
 });
 
 module.exports = mongoose.model("Lot", lotSchema);

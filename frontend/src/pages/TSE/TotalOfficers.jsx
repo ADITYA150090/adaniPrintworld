@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaUserCircle, FaClipboardList, FaIdBadge } from "react-icons/fa";
 import "../../index.css";
 
-const TotalOfficers = () => {
+const totalofficers = () => {
   const [officers, setOfficers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -88,4 +88,4 @@ const TotalOfficers = () => {
   );
 };
 
-export default TotalOfficers;
+export default totalofficers;

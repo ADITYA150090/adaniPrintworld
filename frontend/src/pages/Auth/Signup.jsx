@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { signupOfficer } from "../../api";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const Signup = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [serverMsg, setServerMsg] = useState("");
 
   // Handle input change
   const handleChange = (e) => {
@@ -49,40 +51,26 @@ const Signup = () => {
     if (!validate()) return;
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/signup/officer",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData), // ✅ sends TSE ID too
-        }
-      );
+      const response = await signupOfficer(formData);
 
-      const data = await response.json();
-      console.log("Server Response:", data);
+      console.log("Server Response:", response.data);
+      setServerMsg(response.data.message || "Signup successful! Please verify your email.");
 
-      if (!response.ok) {
-        alert(data.message || "Signup failed");
-        return;
-      }
-
-      alert("Signup successful! Please verify your email.");
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        number: "",
+        address: "",
+        password: "",
+        tseId: "",
+      });
     } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong");
+      console.error("Signup Error:", error.response?.data);
+      setServerMsg(
+        error.response?.data?.message || "Signup failed. Please try again."
+      );
     }
-
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      number: "",
-      address: "",
-      password: "",
-      tseId: "",
-    });
   };
 
   return (

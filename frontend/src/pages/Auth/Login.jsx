@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { login } from "../../api";
 import { jwtDecode } from "jwt-decode";
-
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -35,10 +34,7 @@ const Login = () => {
     if (!validate()) return;
 
     try {
-      const res = await axios.post(
-        "http://localhost:10000/auth/login",
-        formData
-      );
+      const res = await login(formData);
 
       setServerMsg(res.data.message);
 

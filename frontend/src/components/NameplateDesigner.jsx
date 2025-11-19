@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User, Home, MapPin, Palette, ChevronLeft, ChevronRight, Type } from "lucide-react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import { createNameplate } from "../api/officer";
 
 
 
@@ -111,7 +111,7 @@ const TextStyleControls = ({ style, setStyle, fonts, loadFont }) => {
 };
 
 const NameplateDesigner = () => {
-  const { lotId } = useParams(); 
+  const { lotno } = useParams();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("theme");
   const [theme, setTheme] = useState("Ambuja");
@@ -205,25 +205,19 @@ const NameplateDesigner = () => {
   };
 
   const handleSubmit = async () => {
+    const data = {
+      theme,
+      name,
+      address,
+      houseName,
+      selectedImage: images[currentIndex].url,
+      nameStyle,
+      addressStyle,
+      houseStyle
+    };
+    console.log("Submitting nameplate - lotno:", lotno, "data:", data);
     try {
-      const response = await axios.post(
-        `http://localhost:10000/officer/lot/${lotId}/nameplate`,
-        {
-          theme,
-          name,
-          address,
-          houseName,
-          selectedImage: images[currentIndex].url,
-          nameStyle,
-          addressStyle,
-          houseStyle
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          }
-        }
-      );
+      await createNameplate(lotno, data);
       alert("Nameplate saved!");
     } catch (error) {
       console.error("Nameplate Error:", error);

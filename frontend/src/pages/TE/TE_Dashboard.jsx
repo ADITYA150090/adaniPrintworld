@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { getOfficerDashboard } from "../../api";
 import Sidebar from "../../components/Slidebar";
 import { Link } from "react-router-dom";
 import {
@@ -21,19 +21,7 @@ const TEDashboard = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          setError("Token missing, please login again.");
-          setLoading(false);
-          return;
-        }
-
-        const response = await axios.get("http://localhost:10000/officer/dashboard", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await getOfficerDashboard();
 
         if (response.data.success) {
           setUser(response.data.data);

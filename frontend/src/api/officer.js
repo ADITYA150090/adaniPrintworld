@@ -1,15 +1,37 @@
-import axios from "./axiosInstance";
+import axiosInstance from "./axiosInstance";
 
-export const getOfficerDashboard = () => axios.get("/dashboard/officer");
+/**
+ * Officer API endpoints
+ */
 
-export const createLot = (data) => axios.post("/officer/lot", data);
-export const getLots = () => axios.get("/officer/lot");
+// Get Officer Dashboard
+export const getOfficerDashboard = () => {
+    return axiosInstance.get("/officer/dashboard");
+};
 
-export const createNameplate = (lotId, data) =>
-    axios.post(`/officer/lot/${lotId}/nameplate`, data);
+// Alternative dashboard endpoint
+export const getDashboardOfficer = () => {
+    return axiosInstance.get("/dashboard/officer");
+};
 
-export const getNameplates = (lotId) =>
-    axios.get(`/officer/lot/${lotId}/nameplate`);
+// Lot Management
+export const createLot = (data) => {
+    return axiosInstance.post("/officer/lot", data);
+};
 
-export const updateNameplateStatus = (nameplateId, data) =>
-    axios.patch(`/officer/nameplate/${nameplateId}/status`, data);
+export const getLots = () => {
+    return axiosInstance.get("/officer/lot");
+};
+
+// Nameplate Management within Lots
+export const createNameplate = (lotId, data) => {
+    return axiosInstance.post(`/nameplate`, data);
+};
+
+export const getNameplates = (lotId) => {
+    return axiosInstance.get(`/officer/lot/${lotId}/nameplate`);
+};
+
+export const updateNameplateStatus = (nameplateId, data) => {
+    return axiosInstance.patch(`/officer/nameplate/${nameplateId}/status`, data);
+};

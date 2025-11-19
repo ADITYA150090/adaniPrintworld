@@ -12,7 +12,7 @@ const TSEDashboard = () => {
   const navigate = useNavigate();
 
   const [dashboard, setDashboard] = useState({
-    totalOfficers: 0,
+    totalofficers: 0,
     pendingLots: 0,
     verifyOfficers: 0,
   });
@@ -30,7 +30,7 @@ const TSEDashboard = () => {
       const apiData = res.data.data;
 
       setDashboard({
-        totalOfficers: apiData.totalOfficers || 0,
+        totalofficers: apiData.totalofficers || 0,
         pendingLots: 0, // You don't have this yet
         verifyOfficers: apiData.pendingOfficers || 0,
       });
@@ -48,7 +48,7 @@ const TSEDashboard = () => {
     {
       id: 1,
       name: "Total Officers",
-      value: dashboard.totalOfficers,
+      value: dashboard.totalofficers,
       icon: <FaUsers className="text-blue-500 text-2xl sm:text-3xl" />,
       color: "from-blue-100 to-blue-50",
       route: "totalofficers",

@@ -265,7 +265,7 @@ Get admin dashboard statistics.
   "success": true,
   "data": {
     "totalHeads": 10,
-    "totalOfficers": 50,
+    "totalofficers": 50,
     "totalNameplates": 200,
     "pendingApprovals": 5
   }
@@ -311,7 +311,7 @@ Get head dashboard statistics.
 {
   "success": true,
   "data": {
-    "totalOfficers": 15,
+    "totalofficers": 15,
     "pendingOfficers": 3,
     "approvedOfficers": 12,
     "totalLots": 45

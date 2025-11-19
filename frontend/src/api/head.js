@@ -1,5 +1,25 @@
-import axios from "./axiosInstance";
+import axiosInstance from "./axiosInstance";
 
-export const getHeadDashboard = () => axios.get("/dashboard/head");
-export const approveOfficer = (officerId) => axios.patch(`/head/approve/${officerId}`);
-export const rejectOfficer = (officerId) => axios.patch(`/head/reject/${officerId}`);
+/**
+ * Head API endpoints
+ */
+
+// Get Head Dashboard Statistics
+export const getHeadDashboard = () => {
+    return axiosInstance.get("/head/dashboard");
+};
+
+// Alternative dashboard endpoint
+export const getDashboardHead = () => {
+    return axiosInstance.get("/dashboard/head");
+};
+
+// Approve Officer
+export const approveOfficer = (officerId) => {
+    return axiosInstance.patch(`/head/approve/${officerId}`);
+};
+
+// Reject Officer
+export const rejectOfficer = (officerId) => {
+    return axiosInstance.patch(`/head/reject/${officerId}`);
+};

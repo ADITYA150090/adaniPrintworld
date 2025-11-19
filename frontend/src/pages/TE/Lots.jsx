@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Layers, PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getLots, createLot } from "../../api";
 import "../../index.css";
 import Sidebar from "../../components/Slidebar";
+
 
 const Lots = () => {
   const [lots, setLots] = useState([]);
@@ -15,22 +17,15 @@ const Lots = () => {
   useEffect(() => {
     const fetchLots = async () => {
       try {
-        const response = await fetch("http://localhost:10000/officer/lot", {
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`,
-          }
-        });
-    
-        if (!response.ok) throw new Error("Failed to fetch lots");
-        const data = await response.json();
-        setLots(data);
+        const response = await getLots();
+        setLots(response.data.data || []);
       } catch (err) {
         setError(err.message || String(err));
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchLots();
   }, []);
 
@@ -38,22 +33,11 @@ const Lots = () => {
   const handleCreateLot = async () => {
     if (isCreating) return;
     setIsCreating(true);
-  
+
     try {
-      const response = await fetch("http://localhost:10000/officer/lot", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({})
-      });
-  
-      if (!response.ok) throw new Error("Failed to create new lot");
-  
-      const created = await response.json();
-      setLots((prev) => [created, ...prev]);
-      
+      const response = await createLot({});
+      setLots((prev) => [response.data, ...prev]);
+
     } catch (err) {
       alert("Error creating lot: " + (err.message || String(err)));
     } finally {
@@ -125,7 +109,7 @@ const Lots = () => {
               return (
                 <div
                   key={lot.id}
-                  onClick={() => navigate(`${lot.lotno}`)}
+                  onClick={() => navigate(`${lot.lotno}/createnameplate`)}
                   className="cursor-pointer bg-white border border-gray-100 rounded-2xl shadow-md hover:shadow-lg hover:border-blue-400 transition-all duration-200 flex flex-col items-center justify-center p-5 sm:p-6"
                 >
                   {/* Icon + Lot Number */}
