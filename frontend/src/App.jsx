@@ -23,6 +23,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
 import TotalRMO from "./pages/Admin/TotalRMO.jsx";
 import VerifyRMO from "./pages/Admin/VerifyRmo.jsx";
 import PrintNameplates from "./pages/Admin/PrintNameplates.jsx";
+import Profile from "./pages/TSE/Profile.jsx";
 
 const App = () => {
   return (
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="pendinglots" element={<PendingLots />} />
           <Route path="pendinglots/:lotno" element={<VerifyNameplate />} />
           <Route path="verifyofficers" element={<ApproveOfficers />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout/>}>
