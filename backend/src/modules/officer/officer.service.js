@@ -86,27 +86,25 @@ exports.createLot = async(userId) => {
     const OfficerModel = require("../auth/auth.model").Officer;
     const officer = await OfficerModel.findById(userId);
 
-    if (!officer) {
-        throw new Error("Officer not found");
+    if (!officer) throw new Error("Officer not found");
+
+    const lastLot = await Lot.findOne({ officerId: userId })
+        .sort({ createdAt: -1 });
+
+    let nextNumber = 1;
+
+    if (lastLot) {
+        const num = parseInt(lastLot.lotno.replace("LOT", ""));
+        nextNumber = num + 1;
     }
 
-    // Find the last lot created by this officer
-    const lastLot = await Lot.find({ officerId: userId })
-        .sort({ createdAt: -1 })
-        .limit(1);
+    const newLotNo = "LOT" + String(nextNumber).padStart(3, "0");
 
-    let nextLotNumber = 1;
-
-    if (lastLot.length > 0) {
-        nextLotNumber = Number(lastLot[0].lotno) + 1;
-    }
-
-    const lot = new Lot({
-        lotno: nextLotNumber.toString(),
+    const lot = await Lot.create({
+        lotno: newLotNo,
         officerId: userId,
         headId: officer.headId
     });
 
-    await lot.save();
     return lot;
 };
