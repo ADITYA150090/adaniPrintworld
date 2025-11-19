@@ -1,63 +1,91 @@
+require("dotenv").config(); // Load .env
+
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const { Admin, Head, Officer } = require("./src/modules/auth/auth.model");
-require("dotenv").config();
+const faker = require("faker");
+const Nameplate = require("./src/modules/nameplate/nameplate.model");
+const Lot = require("./src/modules/lot/lot.model");
 
-async function seedDatabase() {
-    try {
-        await mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/adaniPrintworld");
+const MONGO_URI = process.env.MONGO_URI;
 
-        // Clear existing data
-        await Admin.deleteMany({});
-        await Head.deleteMany({});
-        await Officer.deleteMany({});
+// MongoDB connection
+mongoose.connect(MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.error("MongoDB connection error:", err));
 
-        // Hash password
-        const hashedPassword = await bcrypt.hash("password123", 10);
-
-        // Create Admin
-        const admin = await Admin.create({
-            name: "Super Admin",
-            email: "admin@example.com",
-            password: hashedPassword,
-            isVerified: true,
-        });
-
-        // Create Head
-        const head = await Head.create({
-            name: "John Doe",
-            number: "1234567890",
-            email: "head@example.com",
-            tseId: "TSE001",
-            district: "Mumbai",
-            pincode: "400001",
-            password: hashedPassword,
-            isVerified: true,
-        });
-
-        // Create Officer
-        const officer = await Officer.create({
-            name: "Jane Smith",
-            email: "officer@example.com",
-            number: "0987654321",
-            address: "123 Main St, Mumbai",
-            tseId: "TSE001",
-            headId: head._id,
-            password: hashedPassword,
-            approvedByHead: true,
-            isVerified: true,
-        });
-
-        console.log("Dummy data seeded successfully!");
-        console.log("Admin: admin@example.com / password123");
-        console.log("Head: head@example.com / password123");
-        console.log("Officer: officer@example.com / password123");
-
-        process.exit(0);
-    } catch (error) {
-        console.error("Error seeding database:", error);
-        process.exit(1);
-    }
+const heads = [];
+for (let i = 1; i <= 10; i++) {
+    heads.push(`TSE${String(i).padStart(3, "0")}`);
 }
 
-seedDatabase();
+const themes = ["Ambuja", "ACC"];
+const images = {
+    Ambuja: ["/ambuja/d1.webp", "/ambuja/d2.webp", "/ambuja/d3.webp", "/ambuja/d4.webp"],
+    ACC: ["/acc/d1.webp", "/acc/d2.webp", "/acc/d3.webp", "/acc/d4.webp"]
+};
+
+const randomStyle = () => ({
+    color: faker.internet.color(),
+    fontSize: faker.datatype.number({ min: 12, max: 60 }),
+    fontWeight: faker.helpers.randomize(["normal", "bold", "600", "700"]),
+    fontStyle: faker.helpers.randomize(["normal", "italic"]),
+    fontFamily: faker.helpers.randomize(["Inter", "Roboto", "Open Sans", "Lato", "Montserrat"])
+});
+
+const seed = async() => {
+    try {
+        // Delete existing data
+        await Nameplate.deleteMany({});
+        await Lot.deleteMany({});
+
+        // Create lots
+        const lots = [];
+        heads.forEach(() => {
+            for (let j = 1; j <= 5; j++) {
+                lots.push({
+                    lotno: `${faker.random.alphaNumeric(3).toUpperCase()}LOT${j}`,
+                    officerId: mongoose.Types.ObjectId(),
+                    headId: mongoose.Types.ObjectId(),
+                    isDeleted: false
+                });
+            }
+        });
+
+        const createdLots = await Lot.insertMany(lots);
+
+        // Create nameplates
+        const nameplates = [];
+        for (let i = 0; i < 500; i++) {
+            const randomLot = faker.helpers.randomize(createdLots);
+            const theme = faker.helpers.randomize(themes);
+            nameplates.push({
+                lotId: randomLot._id,
+                officerId: randomLot.officerId,
+                headId: randomLot.headId,
+                name: faker.name.findName(),
+                address: faker.address.streetAddress(),
+                houseName: faker.address.streetName(),
+                theme,
+                selectedImage: faker.helpers.randomize(images[theme]),
+                nameStyle: randomStyle(),
+                addressStyle: randomStyle(),
+                houseStyle: randomStyle(),
+                status: "unverified",
+                approvalStatus: "Pending",
+                isDeleted: false
+            });
+        }
+
+        await Nameplate.insertMany(nameplates);
+        console.log("Seed complete: 500 nameplates created!");
+
+        mongoose.disconnect();
+    } catch (err) {
+        console.error(err);
+        mongoose.disconnect();
+    }
+};
+
+seed();
