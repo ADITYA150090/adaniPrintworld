@@ -14,7 +14,7 @@ import Lots from "./pages/TE/Lots.jsx";
 import LotsID from "./pages/TE/LotsId.jsx";
 import RmoLayout from "./layouts/RmoLayout.jsx";
 import TSEDashboard from "./pages/TSE/TSE_Dashboard.jsx";
-import totalofficers from "./pages/TSE/totalofficers.jsx";
+import TotalOfficers from "./pages/TSE/totalOfficers.jsx";
 import PendingLots from "./pages/TSE/PendingLot.jsx";
 import VerifyNameplate from "./pages/TSE/VerifyNameplates.jsx";
 import ApproveOfficers from "./pages/TSE/VerifyTE.jsx";
@@ -47,7 +47,7 @@ const App = () => {
         </Route>
          <Route path="/TSE" element={<RmoLayout/>}>
           <Route index element={<TSEDashboard />} />
-          <Route path="totalofficers" element={<totalofficers />} />
+          <Route path="totalofficers" element={<TotalOfficers/>} />
           <Route path="pendinglots" element={<PendingLots />} />
           <Route path="pendinglots/:lotno" element={<VerifyNameplate />} />
           <Route path="verifyofficers" element={<ApproveOfficers />} />

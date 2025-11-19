@@ -21,18 +21,21 @@ const TSEDashboard = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get("http://localhost:10000/head/dashboard", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/head/dashboard`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const apiData = res.data.data;
 
       setDashboard({
-        totalofficers: apiData.totalofficers || 0,
-        pendingLots: 0, // You don't have this yet
-        verifyOfficers: apiData.pendingOfficers || 0,
+        totalofficers: apiData.totalOfficers || 0,
+        pendingLots: apiData.pendingLots || 0,
+        verifyOfficers: apiData.unverifiedOfficers || 0,
       });
 
     } catch (error) {

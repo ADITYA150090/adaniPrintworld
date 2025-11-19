@@ -13,27 +13,29 @@ const ApproveOfficers = () => {
   const [officers, setOfficers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch officers from real backend
+  // Fetch unverified officers
   const fetchOfficers = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:10000/head/dashboard", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/head/unverifiedofficers`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const result = await res.json();
 
-      if (result.success && result.data?.officers) {
-        const pendingList = result.data.officers.filter(
-          (officer) => officer.approvedByHead === false
-        );
-        setOfficers(pendingList);
+      // ✔ Your API returns: success + officers
+      if (result.success && result.officers) {
+        setOfficers(result.officers);
       }
+
     } catch (error) {
       console.log("Fetch Error:", error);
       alert("Failed to load officers");
@@ -48,22 +50,25 @@ const ApproveOfficers = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:10000/head/approve/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  `${import.meta.env.VITE_API_URL}/head/officers/${id}/approve`,
+  {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
 
       const result = await response.json();
+
       if (result.success) {
         setOfficers((prev) => prev.filter((officer) => officer._id !== id));
       } else {
         alert(result.error || "Approval failed");
       }
+
     } catch (error) {
       console.log(error);
       alert("Something went wrong");
@@ -71,32 +76,35 @@ const ApproveOfficers = () => {
   };
 
   // Reject Request
-  const rejectOfficer = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
+ const rejectOfficer = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        `http://localhost:10000/head/reject/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const result = await response.json();
-      if (result.success) {
-        setOfficers((prev) => prev.filter((officer) => officer._id !== id));
-      } else {
-        alert(result.error || "Rejection failed");
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/head/officers/${id}/reject`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } catch (error) {
-      console.log(error);
-      alert("Something went wrong");
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+      setOfficers((prev) => prev.filter((officer) => officer._id !== id));
+    } else {
+      alert(result.error || "Rejection failed");
     }
-  };
+
+  } catch (error) {
+    console.log(error);
+    alert("Something went wrong");
+  }
+};
+
 
   useEffect(() => {
     fetchOfficers();
@@ -108,7 +116,9 @@ const ApproveOfficers = () => {
   return (
     <div className="w-full min-h-screen text-gray-900 p-4 sm:p-6 md:p-10">
       <div className="mb-8 text-center sm:text-left">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Approve Officers</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+          Approve Officers
+        </h1>
       </div>
 
       {officers.length === 0 && (
@@ -122,7 +132,7 @@ const ApproveOfficers = () => {
           <div
             key={officer._id}
             className="bg-white rounded-2xl shadow-md p-6 sm:p-7 border border-gray-100 
-              hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex flex-col justify-between"
+            hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center gap-3 mb-3">
@@ -148,7 +158,6 @@ const ApproveOfficers = () => {
               </div>
             </div>
 
-            {/* Approve & Reject Buttons */}
             <div className="flex justify-between mt-4">
               <button
                 onClick={() => approveOfficer(officer._id)}
@@ -156,6 +165,7 @@ const ApproveOfficers = () => {
               >
                 <FaCheck /> Approve
               </button>
+
               <button
                 onClick={() => rejectOfficer(officer._id)}
                 className="flex items-center justify-center gap-2 bg-red-500 text-white font-medium px-4 py-2 rounded-xl hover:bg-red-600 transition-all text-sm w-[48%]"

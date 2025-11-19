@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaUserCircle, FaClipboardList, FaIdBadge } from "react-icons/fa";
 import "../../index.css";
 
-const totalofficers = () => {
+const TotalOfficers = () => {
   const [officers, setOfficers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -10,18 +10,23 @@ const totalofficers = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:10000/head/dashboard", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/head/officers`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const result = await response.json();
 
-      if (result.success && result.data?.officers) {
-        setOfficers(result.data.officers);
+      // ✔ Your API returns officers directly
+      if (result.success && result.officers) {
+        setOfficers(result.officers);
       }
+
     } catch (error) {
       console.error("Error fetching officers:", error);
     } finally {
@@ -46,14 +51,12 @@ const totalofficers = () => {
           <div
             key={officer._id}
             className="bg-white rounded-2xl shadow-md p-6 sm:p-7 flex items-center gap-4 border border-gray-100
-              hover:shadow-lg hover:scale-[1.01] transition-all duration-300"
+            hover:shadow-lg hover:scale-[1.01] transition-all duration-300"
           >
-            {/* Icon */}
             <div className="shrink-0">
               <FaUserCircle className="text-blue-500 text-5xl sm:text-6xl" />
             </div>
 
-            {/* Details */}
             <div className="flex flex-col justify-center w-full">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-1">
                 {officer.name}
@@ -63,16 +66,16 @@ const totalofficers = () => {
               <p className="text-sm text-gray-600 mb-1">{officer.number}</p>
 
               <div className="flex items-center justify-between mt-1">
-                {/* Officer ID */}
                 <div className="flex items-center gap-2 text-gray-600 text-sm">
                   <FaIdBadge className="text-gray-500" size={14} />
                   <span className="font-medium">{officer.tseId}</span>
                 </div>
 
-                {/* Verification Status */}
                 <span
                   className={`inline-flex items-center gap-1 text-xs sm:text-sm font-semibold px-3 py-1 rounded-full ${
-                    officer.isVerified ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
+                    officer.isVerified
+                      ? "bg-green-100 text-green-700"
+                      : "bg-yellow-100 text-yellow-700"
                   }`}
                 >
                   <FaClipboardList size={12} />
@@ -83,9 +86,8 @@ const totalofficers = () => {
           </div>
         ))}
       </div>
-
     </div>
   );
 };
 
-export default totalofficers;
+export default TotalOfficers;
