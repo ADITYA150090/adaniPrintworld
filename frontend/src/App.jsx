@@ -24,6 +24,7 @@ import TotalRMO from "./pages/Admin/TotalRMO.jsx";
 import VerifyRMO from "./pages/Admin/VerifyRmo.jsx";
 import PrintNameplates from "./pages/Admin/PrintNameplates.jsx";
 import Profile from "./pages/TSE/Profile.jsx";
+import TEProfile from "./pages/TE/TEProfile.jsx";
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="lots" element={<Lots />} />
           <Route path="lots/:lotno" element={<LotsID />} />
           <Route path="lots/:lotno/createnameplate" element={<CreateNameplate />} />
+          <Route path="profile" element={<TEProfile/>} />
           
         </Route>
          <Route path="/TSE" element={<RmoLayout/>}>
