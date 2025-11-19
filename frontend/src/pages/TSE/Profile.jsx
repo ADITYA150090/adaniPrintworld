@@ -8,19 +8,24 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const storedId = localStorage.getItem("userId"); // Get saved user ID
+        const token = localStorage.getItem("token");
 
-        if (!storedId) {
-          console.log("No user logged in");
+        if (!token) {
+          console.log("No token found. User is not logged in.");
           setLoading(false);
           return;
         }
 
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/auth/user/${storedId}`
+          `${import.meta.env.VITE_API_URL}/auth/profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
-        setUser(res.data.data); // assign user data from backend
+        setUser(res.data.data); 
         setLoading(false);
       } catch (error) {
         console.log("Profile Fetch Error:", error.response?.data);
@@ -37,7 +42,7 @@ const Profile = () => {
   if (!user)
     return (
       <p className="text-center mt-10 text-red-500">
-        No user data found. Please login again.
+        Cannot load profile. Please login again.
       </p>
     );
 
@@ -47,21 +52,11 @@ const Profile = () => {
         <h2 className="text-2xl font-bold text-center mb-6">Your Profile</h2>
 
         <div className="space-y-4">
-          <p>
-            <strong>Name:</strong> {user.name}
-          </p>
-          <p>
-            <strong>Email:</strong> {user.email}
-          </p>
-          <p>
-            <strong>Mobile:</strong> {user.number}
-          </p>
-          <p>
-            <strong>District:</strong> {user.district}
-          </p>
-          <p>
-            <strong>Pincode:</strong> {user.pincode}
-          </p>
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Mobile:</strong> {user.number}</p>
+          <p><strong>District:</strong> {user.district}</p>
+          <p><strong>Pincode:</strong> {user.pincode}</p>
 
           {user.tseId && (
             <p className="text-blue-600 font-semibold">
