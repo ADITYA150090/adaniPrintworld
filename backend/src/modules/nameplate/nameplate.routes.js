@@ -8,13 +8,13 @@ router.post("/", nameplateController.create.bind(nameplateController));
 // Get all nameplates
 router.get("/", nameplateController.getAll.bind(nameplateController));
 
-// Get one by ID
+// Get nameplate by ID
 router.get("/:id", nameplateController.getById.bind(nameplateController));
 
-// Approve
+// Approve nameplate
 router.patch("/:id/approve", nameplateController.approve.bind(nameplateController));
 
-// Reject
+// Reject nameplate
 router.patch("/:id/reject", nameplateController.reject.bind(nameplateController));
 
 module.exports = router;
