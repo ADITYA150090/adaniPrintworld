@@ -22,6 +22,7 @@ const TEDashboard = () => {
     const getUserData = async () => {
       try {
         const response = await getOfficerDashboard();
+        console.log("Dashboard Response:", response);
 
         // handle both: { success, data: {...} } OR just {...}
         const payload = response.data?.data || response.data;
@@ -69,9 +70,6 @@ const TEDashboard = () => {
         <h1 className="text-2xl md:text-3xl font-bold mb-1">
           Technical Executive Dashboard
         </h1>
-        <span className="text-gray-900 text-md">
-          {User?.officerId || "User"}
-        </span>
       </div>
 
       {/* Top Stats */}
