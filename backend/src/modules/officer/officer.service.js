@@ -67,7 +67,9 @@ exports.createLot = async(userId) => {
         }
 
         // Generate new lot number with padding (e.g., LOT001, LOT002)
-        const newLotNo = "LOT" + String(nextNumber).padStart(3, "0");
+   const newLotNo = "LOT" + officer.id.substring(0, 4).toUpperCase() + String(nextNumber).padStart(3, "0");
+
+// Example output: LOT-ABCD001
 
         // Create new lot
         const lot = await Lot.create({
