@@ -23,7 +23,7 @@ const Sidebar = ({ isOpen, toggleSidebar ,items=[]}) => {
 
  const menuItems = Array.isArray(items) ? items : [];
 
-  console.log("Sidebar items:", menuItems);
+  
 
   const activeRoute = location.pathname;
   const handleNavigation = (path) => {

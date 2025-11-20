@@ -247,32 +247,48 @@ const NameplateDesigner = () => {
   };
 
   // ---------- minimal change: build & return object locally (no API) ----------
-  const handleSubmit = async () => {
-    const obj = {
-      lotId: lotno,
-      officerId: officerId || localStorage.getItem("officerId") || null,
-      headId: headId || localStorage.getItem("tseId") || localStorage.getItem("headId") || null,
-      name: name || "",
-      address: address || "",
-      houseName: houseName || "",
+const handleSubmit = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("User not logged in");
+      return;
+    }
+
+    const payload = {
+      name,
+      address,
+      houseName,
       theme,
       selectedImage: images[currentIndex].url,
-      nameStyle: { ...nameStyle },
-      addressStyle: { ...addressStyle },
-      houseStyle: { ...houseStyle },
-      status: "unverified"
+      nameStyle,
+      addressStyle,
+      houseStyle
     };
 
-    // store locally so UI or parent can access if needed
-    setCreatedNameplate(obj);
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/officer/lot/${lotno}/nameplate`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
 
-    // log + show quick feedback
-    console.log("Created nameplate object:", obj);
+    setCreatedNameplate(res.data.data);
 
+    console.log("Nameplate saved:", res.data.data);
+    alert("Nameplate Created Successfully");
 
-    // Return the object (if caller expects it)
-    return obj;
-  };
+    return res.data.data;
+
+  } catch (error) {
+    console.error("Error saving nameplate:", error.response?.data || error);
+    alert(error.response?.data?.message || "Failed to create nameplate");
+  }
+};
+
   // ---------- end minimal change ----------
 
   return (
