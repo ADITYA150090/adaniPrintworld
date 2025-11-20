@@ -1,226 +1,87 @@
+// officer.service.js
 const Lot = require("../lot/lot.model");
 const Nameplate = require("../nameplate/nameplate.model");
+const { Officer } = require("../auth/auth.model");
 
 exports.getDashboardStats = async(userId) => {
-    try {
-        // Get total lots created by officer
-        const totalLots = await Lot.countDocuments({
-            officerId: userId,
-            isDeleted: false
-        });
+    const totalLots = await Lot.countDocuments({ officerId: userId, isDeleted: false });
+    const totalNameplates = await Nameplate.countDocuments({ officerId: userId, isDeleted: false });
 
-        // Get total nameplates created by officer
-        const totalNameplates = await Nameplate.countDocuments({
-            officerId: userId,
-            isDeleted: false
-        });
-
-        // Get nameplates by status
-        const pendingNameplates = await Nameplate.countDocuments({
-            officerId: userId,
-            status: "pending",
-            isDeleted: false
-        });
-
-        const approvedNameplates = await Nameplate.countDocuments({
-            officerId: userId,
-            status: "approved",
-            isDeleted: false
-        });
-
-        const rejectedNameplates = await Nameplate.countDocuments({
-            officerId: userId,
-            status: "rejected",
-            isDeleted: false
-        });
-
-        return {
-            totalLots,
-            totalNameplates,
-            pendingNameplates,
-            approvedNameplates,
-            rejectedNameplates
-        };
-    } catch (error) {
-        console.error("Error in getDashboardStats:", error);
-        throw new Error("Failed to fetch dashboard stats");
-    }
+    return {
+        totalLots,
+        totalNameplates,
+        pendingNameplates: await Nameplate.countDocuments({ officerId: userId, status: "pending", isDeleted: false }),
+        approvedNameplates: await Nameplate.countDocuments({ officerId: userId, status: "approved", isDeleted: false }),
+        rejectedNameplates: await Nameplate.countDocuments({ officerId: userId, status: "rejected", isDeleted: false })
+    };
 };
 
-exports.createLot = async(userId, tseId) => {
-    try {
-        const OfficerModel = require("../auth/auth.model").Officer;
-        const Lot = require("./lot/lot.model"); // make sure Lot is imported
+// CREATE LOT
+exports.createLot = async(userId) => {
+    const officer = await Officer.findById(userId);
+    if (!officer) throw new Error("Officer not found");
 
-        // Fetch officer and TSE
-        const officer = await OfficerModel.findById(userId);
-        if (!officer) throw new Error("Officer not found");
+    if (!officer.tseId) throw new Error("Officer does not have a TSE assigned");
 
-        const tse = await OfficerModel.findById(tseId);
-        if (!tse) throw new Error("TSE not found");
+    const lastLot = await Lot.findOne({ officerId: userId }).sort({ createdAt: -1 });
 
-        // Find the last lot created by this officer
-        const lastLot = await Lot.findOne({ officerId: userId })
-            .sort({ createdAt: -1 });
-
-        let nextNumber = 1;
-        if (lastLot) {
-            const num = parseInt(lastLot.lotno.replace("LOT", ""));
-            nextNumber = num + 1;
-        }
-
-        const newLotNo = "LOT" + String(nextNumber).padStart(3, "0");
-
-        // Create new lot
-        const lot = await Lot.create({
-            lotno: newLotNo,
-            officerId: userId,
-            tseId: officer.tseId // use officer's tseId
-        });
-
-        return lot.toObject();
-    } catch (error) {
-        console.error("Error in createLot:", error);
-        throw error;
+    let nextNumber = 1;
+    if (lastLot) {
+        nextNumber = parseInt(lastLot.lotno.replace("LOT", "")) + 1;
     }
+
+    const lot = await Lot.create({
+        lotno: "LOT" + String(nextNumber).padStart(3, "0"),
+        officerId: userId,
+        tseId: officer.tseId, // Keep TSE string
+        headId: officer.headId || null
+    });
+
+    return lot.toObject();
 };
 
-
+// GET ALL LOTS
 exports.getAllLots = async(userId) => {
-    try {
-        // Get all lots for the officer, sorted by newest first
-        const lots = await Lot.find({
-                officerId: userId,
-                isDeleted: false
-            })
-            .sort({ createdAt: -1 });
-
-        return lots;
-    } catch (error) {
-        console.error("Error in getAllLots:", error);
-        throw new Error("Failed to fetch lots");
-    }
+    return Lot.find({ officerId: userId, isDeleted: false }).sort({ createdAt: -1 });
 };
 
-exports.createNameplate = async(lotId, data, userId) => {
-    try {
-        console.log("Service createNameplate - lotId:", lotId, "userId:", userId, "data:", data);
+// CREATE NAMEPLATE
+exports.createNameplate = async(lotno, data, userId) => {
+    const lot = await Lot.findOne({ lotno, isDeleted: false });
+    if (!lot) throw new Error("Lot not found");
 
-        // Validate lotId
-        if (!lotId) {
-            throw new Error("Lot ID is required");
-        }
-
-        // Check if lot exists by lotno
-        let lot = await Lot.findOne({ lotno: lotId, isDeleted: false });
-        console.log("Lot found:", lot);
-
-        if (!lot) {
-            // If lot doesn't exist, create it
-            const OfficerModel = require("../auth/auth.model").Officer;
-            const officer = await OfficerModel.findById(userId);
-            console.log("Officer found:", officer);
-
-            if (!officer) {
-                throw new Error("Officer not found");
-            }
-
-            lot = new Lot({
-                lotno: lotId,
-                officerId: userId,
-                headId: officer.headId
-            });
-            await lot.save();
-            console.log("Lot created:", lot);
-        }
-
-        // Verify lot belongs to the officer
-        if (lot.officerId.toString() !== userId.toString()) {
-            throw new Error("Unauthorized: Lot does not belong to this officer");
-        }
-
-        // Get officer details for headId
-        const OfficerModel = require("../auth/auth.model").Officer;
-        const officer = await OfficerModel.findById(userId);
-        if (!officer) {
-            throw new Error("Officer not found");
-        }
-
-        // Create nameplate with lot's _id (not lotno)
-        const nameplate = new Nameplate({
-            lotId: lot._id, // Use the MongoDB _id of the lot
-            officerId: userId,
-            headId: officer.headId,
-            ...data
-        });
-        console.log("Creating nameplate:", nameplate);
-
-        await nameplate.save();
-        console.log("Nameplate saved:", nameplate);
-
-        return nameplate;
-    } catch (error) {
-        console.error("Error in createNameplate:", error);
-        throw error;
+    if (lot.officerId.toString() !== userId.toString()) {
+        throw new Error("Unauthorized: Lot does not belong to this officer");
     }
+
+    const officer = await Officer.findById(userId);
+
+    const nameplate = await Nameplate.create({
+        lotId: lot._id,
+        officerId: userId,
+        headId: officer.headId || null,
+        ...data
+    });
+
+    return nameplate;
 };
 
-exports.getNameplatesByLot = async(lotId) => {
-    try {
-        // Validate lotId
-        if (!lotId) {
-            throw new Error("Lot ID is required");
-        }
+// GET NAMEPLATES BY LOT
+exports.getNameplatesByLot = async(lotno) => {
+    const lot = await Lot.findOne({ lotno, isDeleted: false });
+    if (!lot) throw new Error("Lot not found");
 
-        // Find lot by lotno
-        const lot = await Lot.findOne({ lotno: lotId, isDeleted: false });
-        if (!lot) {
-            throw new Error("Lot not found");
-        }
-
-        // Get nameplates for the lot using lot's _id
-        const nameplates = await Nameplate.find({
-                lotId: lot._id,
-                isDeleted: false
-            })
-            .sort({ createdAt: -1 });
-
-        return nameplates;
-    } catch (error) {
-        console.error("Error in getNameplatesByLot:", error);
-        throw error;
-    }
+    return Nameplate.find({ lotId: lot._id, isDeleted: false }).sort({ createdAt: -1 });
 };
 
+// UPDATE STATUS
 exports.updateNameplateStatus = async(nameplateId, status) => {
-    try {
-        // Validate inputs
-        if (!nameplateId) {
-            throw new Error("Nameplate ID is required");
-        }
-        if (!status) {
-            throw new Error("Status is required");
-        }
+    const valid = ["pending", "approved", "rejected"];
+    if (!valid.includes(status)) throw new Error("Invalid status");
 
-        // Validate status value
-        const validStatuses = ["pending", "approved", "rejected"];
-        if (!validStatuses.includes(status)) {
-            throw new Error(`Invalid status. Must be one of: ${validStatuses.join(", ")}`);
-        }
+    const updated = await Nameplate.findOneAndUpdate({ _id: nameplateId, isDeleted: false }, { status, updatedAt: Date.now() / 1000 }, { new: true });
 
-        // Find and update nameplate
-        const nameplate = await Nameplate.findOneAndUpdate({ _id: nameplateId, isDeleted: false }, {
-            status,
-            updatedAt: Date.now() / 1000
-        }, { new: true });
+    if (!updated) throw new Error("Nameplate not found");
 
-        if (!nameplate) {
-            throw new Error("Nameplate not found");
-        }
-
-        return nameplate;
-    } catch (error) {
-        console.error("Error in updateNameplateStatus:", error);
-        throw error;
-    }
+    return updated;
 };

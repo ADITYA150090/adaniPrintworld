@@ -1,10 +1,13 @@
+// lot.model.js
 const mongoose = require("mongoose");
 
 const lotSchema = new mongoose.Schema({
     lotno: { type: String, required: true },
     officerId: { type: mongoose.Schema.Types.ObjectId, ref: "Officer", required: true },
+    tseId: { type: String, required: false }, // FIXED: string, not ObjectId
     headId: { type: mongoose.Schema.Types.ObjectId, ref: "Head", default: null },
     isDeleted: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
     createdAt: { type: Number, default: () => Date.now() / 1000 },
     updatedAt: { type: Number, default: () => Date.now() / 1000 }
 });

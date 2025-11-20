@@ -1,13 +1,18 @@
 const headService = require("./head.service");
+const Officer = require("../auth/auth.model").Officer;
+const Lot = require("../lot/lot.model");
 
 exports.dashboard = async(req, res) => {
     try {
-        const data = await headService.getDashboard(req.user.id);
+        const headId = req.user.id; // ✔ correct
+        const data = await headService.getDashboard(headId);
+
         res.json({ success: true, data });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
 };
+
 
 exports.getVerifiedOfficers = async(req, res) => {
     try {
@@ -47,12 +52,24 @@ exports.rejectOfficer = async(req, res) => {
 
 exports.getUnverifiedLots = async(req, res) => {
     try {
-        const lots = await headService.getUnverifiedLots(req.user.id);
-        res.json({ success: true, lots });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        const lots = await Lot.find({
+            officerId: req.user.id,
+            isVerified: false,
+            isDeleted: false
+        });
+
+        res.status(200).json({
+            success: true,
+            data: lots
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 };
+
 
 exports.approveLot = async(req, res) => {
     try {
