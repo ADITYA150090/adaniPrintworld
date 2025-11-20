@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { User, Home, MapPin, Palette, ChevronLeft, ChevronRight } from "lucide-react";
+import axios from "axios";
+import { User, Home, MapPin, Palette, ChevronLeft, ChevronRight, Type } from "lucide-react";
 import { useParams } from "react-router-dom";
+// removed createNameplate import as requested (no API call now)
 
 const TextStyleControls = ({ style, setStyle, fonts, loadFont }) => {
   const colorPalette = [

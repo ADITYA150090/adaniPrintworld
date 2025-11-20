@@ -22,13 +22,23 @@ const TEDashboard = () => {
     const getUserData = async () => {
       try {
         const response = await getOfficerDashboard();
+        console.log("Dashboard Response:", response);
 
-        if (response.data.success) {
-          setUser(response.data.data);
-        } else {
+        // handle both: { success, data: {...} } OR just {...}
+        const payload = response.data?.data || response.data;
+
+        if (!payload) {
           setError("Failed to fetch data");
+          return;
         }
 
+        // backend: totalLots, pendingNameplates, approvedNameplates
+        // frontend UI: unverified, verified
+        setUser({
+          ...payload,
+          unverified: payload.pendingNameplates ?? 0,
+          verified: payload.approvedNameplates ?? 0,
+        });
       } catch (err) {
         setError(err.message || "Server Error");
       } finally {
@@ -55,15 +65,11 @@ const TEDashboard = () => {
 
   return (
     <div className="w-full min-h-screen text-gray-900 p-6 md:p-10">
-
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-1">
           Technical Executive Dashboard
         </h1>
-        <span className="text-gray-900 text-md">
-          {User?.officerId || "User"}
-        </span>
       </div>
 
       {/* Top Stats */}
@@ -103,7 +109,9 @@ const TEDashboard = () => {
             className={` bg-white shadow-lg rounded-2xl p-5 flex items-center justify-between transition-all duration-300 hover:scale-[1.02]`}
           >
             <div className="flex items-center gap-4">
-              <div className={`p-3 bg-linear-to-br ${stat.color} rounded-full shadow`}>
+              <div
+                className={`p-3 bg-linear-to-br ${stat.color} rounded-full shadow`}
+              >
                 {stat.icon}
               </div>
               <div>
@@ -131,7 +139,9 @@ const TEDashboard = () => {
         </Link>
         <div className="bg-amber-100 hover:bg-amber-200 transition-all duration-300 rounded-2xl p-6 flex justify-between items-center shadow-lg">
           <div>
-            <h2 className="text-lg font-bold text-gray-800 mb-1">Track your Order</h2>
+            <h2 className="text-lg font-bold text-gray-800 mb-1">
+              Track your Order
+            </h2>
             <p className="text-sm text-gray-600">See your delivery status</p>
           </div>
           <div className="bg-white p-4 rounded-full shadow">

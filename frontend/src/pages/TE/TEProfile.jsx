@@ -47,22 +47,20 @@ const TEProfile = () => {
     );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex items-center justify-center  px-4">
       <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full">
-        <h2 className="text-2xl font-bold text-center mb-6">Your Profile</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">Your Profile {user.tseId && (
+            <p className="text-blue-500 font-medium">
+              <strong>TSE ID:</strong> {user.tseId}
+            </p>
+          )}</h2>
+        
 
         <div className="space-y-4">
           <p><strong>Name:</strong> {user.name}</p>
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Mobile:</strong> {user.number}</p>
-          {/* <p><strong>District:</strong> {user.district}</p>
-          <p><strong>Pincode:</strong> {user.pincode}</p> */}
 
-          {user.tseId && (
-            <p className="text-blue-600 font-semibold">
-              <strong>TSE ID:</strong> {user.tseId}
-            </p>
-          )}
         </div>
       </div>
     </div>
