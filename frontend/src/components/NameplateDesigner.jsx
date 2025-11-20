@@ -196,25 +196,81 @@ const NameplateDesigner = () => {
   const handlePrev = () => setCurrentIndex(prev => prev === 0 ? images.length - 1 : prev - 1);
   const handleNext = () => setCurrentIndex(prev => prev === images.length - 1 ? 0 : prev + 1);
 
-  const handleSubmit = () => {
-    const obj = {
-      lotId: lotno,
-      officerId: officerId || null,
-      headId: headId || null,
+        const profile = res.data?.data || res.data;
+
+        const fetchedOfficerId = profile._id ?? profile.officerId ?? null;
+        const fetchedHeadId = profile.tseId ?? profile.headId ?? null;
+
+        if (fetchedOfficerId) {
+          setOfficerId(fetchedOfficerId);
+          localStorage.setItem("officerId", fetchedOfficerId);
+        }
+        if (fetchedHeadId) {
+          setHeadId(fetchedHeadId);
+          localStorage.setItem("tseId", fetchedHeadId);
+        }
+      } catch (err) {
+        // non-blocking: just warn
+        console.warn("Could not fetch profile for IDs:", err);
+      }
+    };
+
+    fetchProfileIfNeeded();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once; dependencies intentionally empty to keep minimal
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  // ---------- minimal change: build & return object locally (no API) ----------
+const handleSubmit = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("User not logged in");
+      return;
+    }
+
+    const payload = {
       name,
       address,
       houseName,
       theme,
       selectedImage: images[currentIndex].url,
-      nameStyle: { ...nameStyle },
-      addressStyle: { ...addressStyle },
-      houseStyle: { ...houseStyle },
-      status: "unverified"
+      nameStyle,
+      addressStyle,
+      houseStyle
     };
 
-    setCreatedNameplate(obj);
-    console.log("Created nameplate object:", obj);
-  };
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/officer/lot/${lotno}/nameplate`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    setCreatedNameplate(res.data.data);
+
+    console.log("Nameplate saved:", res.data.data);
+    alert("Nameplate Created Successfully");
+
+    return res.data.data;
+
+  } catch (error) {
+    console.error("Error saving nameplate:", error.response?.data || error);
+    alert(error.response?.data?.message || "Failed to create nameplate");
+  }
+};
+
+  // ---------- end minimal change ----------
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center px-4 py-6 md:py-8">

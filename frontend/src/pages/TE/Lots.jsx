@@ -65,6 +65,7 @@ const handleCreateLot = async () => {
 
     // REFRESH THE LOT LIST again to get REAL names from API
     const response = await getLots();
+    console.log("Lots after creation:", response);
 
     let lotsData = [];
 
@@ -158,7 +159,7 @@ const handleCreateLot = async () => {
 
                 return (
                   <div
-                    key={lot.id}
+                    key={lot.lotno}
                     onClick={() =>
                       navigate(`${lot.lotno}`)
                     }

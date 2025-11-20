@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
 const nameplateSchema = new mongoose.Schema({
-    lotId: { type: String, required: true }, // STRING
-    officerId: { type: String, required: true }, // STRING
-    headId: { type: String, required: true }, // STRING
-
+    lotId: { type: mongoose.Schema.Types.ObjectId, ref: "Lot", required: true },
+    officerId: { type: mongoose.Schema.Types.ObjectId, ref: "Officer", required: true },
+    headId: { type: mongoose.Schema.Types.ObjectId, ref: "Head", required: false },
     name: { type: String, required: true },
     address: { type: String, required: true },
     houseName: { type: String, required: true },

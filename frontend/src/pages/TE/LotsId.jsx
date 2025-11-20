@@ -24,7 +24,7 @@ const LotsID = () => {
     fetchNameplates();
   }, [lotno]);
 
-  const handleCreateSlot = () => {
+  const handleCreateDesign = () => {
     navigate(`createnameplate`);
   };
 
@@ -44,12 +44,12 @@ const LotsID = () => {
       {/* Nameplates Grid */}
       {nameplates.length > 0 ? (
         <div className="w-full max-w-6xl bg-white border border-gray-200 rounded-2xl shadow-sm p-8 relative">
-          {/* Top-right Create Slot Button */}
+          {/* Top-right Create Design Button */}
           <button
-            onClick={handleCreateSlot}
+            onClick={handleCreateDesign}
             className="absolute top-5 right-6 bg-black text-white font-medium px-5 py-2.5 rounded-full hover:bg-gray-700 transition-all shadow-sm"
           >
-            Create slot +
+            Create Design +
           </button>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -69,12 +69,12 @@ const LotsID = () => {
       ) : (
         /* Card */
         <div className="w-full max-w-6xl bg-white border border-gray-200 rounded-2xl shadow-sm py-16 px-8 flex justify-center relative">
-          {/* Top-right Create Slot Button */}
+          {/* Top-right Create Design Button */}
           <button
-            onClick={handleCreateSlot}
+            onClick={handleCreateDesign}
             className="absolute top-5 right-6 bg-black text-white font-medium px-5 py-2.5 rounded-full hover:bg-gray-700 transition-all shadow-sm"
           >
-            Create slot +
+            Create Design +
           </button>
 
           {/* Center Message */}
@@ -87,7 +87,7 @@ const LotsID = () => {
             </p>
 
             <button
-              onClick={handleCreateSlot}
+              onClick={handleCreateDesign}
               className="bg-black text-white font-semibold px-6 py-2.5 rounded-full hover:bg-gray-700 transition-all shadow-sm"
             >
               Create first nameplate
