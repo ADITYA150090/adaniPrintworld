@@ -1,27 +1,24 @@
 @import "tailwindcss";
-
 .dash {
-  
-  background-image: url('/images/bg.png');
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
-  
+    background-image: url('/images/bg.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
 }
-
 
 .dash::before {
-  content: "";
-  position:fixed;
-  inset: 0;
-  background: inherit;
-  filter: blur(10px);
-  transform: scale(1.1); 
-  z-index: 0;
+    content: "";
+    position: absolute;
+    /* FIXED – should NOT be fixed */
+    inset: 0;
+    background: inherit;
+    filter: blur(10px);
+    transform: scale(1.1);
+    z-index: 0;
 }
 
-
-.dash > * {
-  
-  z-index: 1;
+.dash>* {
+    position: relative;
+    z-index: 1;
 }
