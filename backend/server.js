@@ -27,9 +27,10 @@ app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/head", headRoutes);
 app.use("/officer", officerRoutes);
-
+app.use("/lot", require("./src/modules/lot/lot.routes"));
 
 app.use("/api/nameplate", nameplateRoutes);
+
 // app.use("/dashboard", dashboardRoutes);
 
 // Default route
